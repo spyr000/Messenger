@@ -1,0 +1,42 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Registration Error</title>
+  <style>
+    .text_container {
+      margin-left: auto;
+      margin-right: auto;
+      align-self: center;
+      text-transform: uppercase;
+      color: lightyellow;
+      width: auto;
+      height: auto;
+      background: #00000094;
+      padding: 10px;
+      text-align: center;
+      font: bold 56px/68px "Comic Sans MS", Sans-Serif;
+      align-content: center;
+    }
+    .text_with_bg {
+      width: 100%;
+      height: 100%;
+      background: url('https://i.pinimg.com/originals/21/c6/49/21c649da5db6ad05a7491e281fa7916f.jpg') no-repeat center center;
+      display: flex;
+      position: center;
+    }
+    .background {
+      background-color: antiquewhite;
+    }
+  </style>
+</head>
+<body>
+<div class="background">
+  <div class="text_with_bg">
+
+    <div class="text_container">
+      <span th:text="${message}"></span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
