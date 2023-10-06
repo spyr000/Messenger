@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ErrorMessage {
     private int statusCode;
-    private LocalDateTime time;
+    private String time;
     private String message;
     private String description;
 }

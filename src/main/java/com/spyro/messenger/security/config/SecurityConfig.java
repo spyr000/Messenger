@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -56,7 +57,7 @@ public class SecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler)
                 .authenticationEntryPoint((request, response, authException) -> {
                     try {
-                        Optional.of(request.getHeader("Authorization"))
+                        Optional.of(request.getHeader(HttpHeaders.AUTHORIZATION))
                                 .ifPresent(
                                         (req) -> {
                                             if (req.isBlank()) {
@@ -77,13 +78,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         (requests) -> requests
                                 .requestMatchers(
-                                        "/api/v1/auth/token",
-                                        "/api/v1/auth/authenticate",
-                                        "/api/v1/auth/register",
-                                        "/api/v1/auth/verify",
-                                        "/api/v1/confirmation/**"
-                                ).permitAll()
-                                .requestMatchers(
                                         "/v2/api-docs",
                                         "/v3/api-docs",
                                         "/v3/api-docs/**",
@@ -93,7 +87,12 @@ public class SecurityConfig {
                                         "/configuration/security",
                                         "/webjars/**",
                                         "/swagger-ui/**",
-                                        "/swagger-ui.html"
+                                        "/swagger-ui.html",
+                                        "/api/v1/confirmation/**",
+                                        "/api/v1/auth/register",
+                                        "/api/v1/auth/authenticate",
+                                        "/api/v1/auth/token",
+                                        "/favicon.ico"
                                 ).permitAll()
                                 .requestMatchers("/api/v1/**").hasAnyRole("USER", "ADMIN")
                                 .anyRequest().authenticated()

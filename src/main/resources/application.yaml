@@ -13,19 +13,22 @@ openapi:
 
 
 security:
+  geolocation-api:
+    api-key: ${SECURITY_GEOLOCATION_APIKEY}
   email-verification:
-    mail-sender-name: Message inc.
+    mail-sender-name: Message inc
     subject: Please verify your registration
     confirmation-server-address: http://localhost:8080
 
   encryption:
-    token-expiration-time-millis:
-      access: '604800000'
-      refresh: '1209600000'
-    token-key:
-      access: 7yn6LXb4QIUUNPuxU5a18DVp4Dt5fbQA6PF6/OgvfPLWUsdvZCv95KlV+gsumL6WtjInxrabUlr2Mk2rom4vpQhBlcTh2RqRS70D2BOdW6rPL5HlZHdaJK4jzO46Dd4cz7rmHaN6+KGN/i3ZxUOwWI7GckSjyDZWa1CuAVV23lU=
-      refresh: JOMLE3aX7UQaC1DUdQK8r8lj1d7tlh6ffDj+gc3nKB9L+pWFyeCYoo1SB7/uaNZqn5G5LdlrGw6xAJJ1l4gICzQvO/wWTCPXcru02m3P3966GuXwjW88AuBy33YvU8oGI5T58lHrfwaOaLq9rvcvNq8M97BLpWa4vR0szx7n24JGGqH9TBOj5iP0TJ4aEsO2
-
+    access-token:
+      expiration-time: '604800000'
+      signing-key: tO8LeGFYHpx5xP0i8SAVqgpvaVwN+rwrqyTlndBAnaZmP6R+a43E+NzDXi36gbm/HAFnl7TCShg90nk4eMA0pXIIiZGAfIqWUporw+k6XR4=
+    refresh-token:
+      expiration-time: '1209600000'
+      signing-key: R+jF202C6JeTuDPZZqjDGpKS9D7PwnQukzlNgwNlmUU4kZ0gtWGiIOXIzFHgxn3QO6UkcZBPtZMBFXXt9qlAUDNTKPfAylG/xRmZh9ghTjg=
+    confirmation-token:
+      signing-key: PrbGMDXQSlrvFu76M9lpPcWoENIdgCKtrr7ZWqIhR1fm8nPNri182Y4ia3A+aDkoyFr0bEq3wH7gay5Kth6StDDRgrexDn4vX49B7FzTujg=
 spring:
   jpa:
     database: postgresql

@@ -56,7 +56,7 @@ public class BusinessServiceControllerAdvice {
         return ErrorMessage.builder()
                 .message(message)
                 .description(request.getDescription(false))
-                .time(LocalDateTime.now())
+                .time(LocalDateTime.now().toString())
                 .statusCode(httpStatus.value())
                 .build();
     }

@@ -3,11 +3,9 @@ package com.spyro.messenger.security.emailverification.service.impl;
 
 import com.spyro.messenger.exceptionhandling.exception.EntityAlreadyExistsException;
 import com.spyro.messenger.security.emailverification.entity.ConfirmationToken;
-import com.spyro.messenger.security.emailverification.repo.ConfirmationTokenRepo;
 import com.spyro.messenger.security.emailverification.service.EmailSenderService;
-import com.spyro.messenger.security.emailverification.service.RegistrationConfirmationService;
+import com.spyro.messenger.security.emailverification.service.ConfirmationService;
 import com.spyro.messenger.user.entity.User;
-import com.spyro.messenger.user.repo.repo.UserRepo;
 import com.spyro.messenger.user.service.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -26,11 +24,8 @@ import java.util.function.Function;
 @Service
 public class EmailSenderServiceImpl implements EmailSenderService {
     private final JavaMailSender mailSender;
-
-    private final RegistrationConfirmationService confirmationTokenService;
-
+    private final ConfirmationService confirmationTokenService;
     private final UserService userService;
-
     private final Function<Resource, String> htmlReader;
     @Value("${spring.mail.username}")
     private String mailSenderEmail;
@@ -42,21 +37,20 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     private String confirmationServerAddress;
     @Value("classpath:emailverification/confirmRegistrationMessageContent.html")
     private Resource emailVerificationMessageContentHtml;
-    private final UserRepo userRepo;
-    private final ConfirmationTokenRepo confirmationTokenRepo;
 
     @Async
     @Override
     public void sendEmail(User user) throws MessagingException, UnsupportedEncodingException {
-
         if (userService.userExists(user)) throw new EntityAlreadyExistsException(User.class);
-        else userService.saveUser(user);
+        else {
+            userService.save(user);
+        }
         var token = confirmationTokenService.register(user);
-        var message = verificationMimeMessageBuilder(user,token);
+        var message = confirmationMessageBuilder(user,token);
         mailSender.send(message);
     }
 
-    private MimeMessage verificationMimeMessageBuilder(User user, ConfirmationToken token) throws MessagingException, UnsupportedEncodingException {
+    private MimeMessage confirmationMessageBuilder(User user, ConfirmationToken token) throws MessagingException, UnsupportedEncodingException {
         var message = mailSender.createMimeMessage();
         var helper = new MimeMessageHelper(message);
         var verifyUrl = buildConfirmRegistrationUrl(confirmationServerAddress, token.getToken());

@@ -1,12 +1,12 @@
 package com.spyro.messenger.security.filter;
 
 
+import com.spyro.messenger.exceptionhandling.exception.BaseException;
 import com.spyro.messenger.exceptionhandling.exception.ErrorMessage;
-import com.spyro.messenger.exceptionhandling.exception.ParseJwtException;
+import com.spyro.messenger.security.deviceinfoparsing.service.DeviceInfoService;
 import com.spyro.messenger.security.misc.TokenType;
 import com.spyro.messenger.security.service.HttpServletUtilsService;
 import com.spyro.messenger.security.service.JwtService;
-import com.spyro.messenger.user.repo.repo.UserRepo;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,8 +24,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.regex.Pattern;
 
 @Slf4j
 @Component
@@ -36,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     private final HttpServletUtilsService httpServletUtilsService;
 
-    private static final String AUTH_HEADER_START_WITH = "Bearer ";
+    private final DeviceInfoService deviceInfoService;
 
     @Override
     protected void doFilterInternal(
@@ -48,23 +46,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwtToken;
         final String username;
         try {
-            if (authHeader == null || !authHeader.startsWith(AUTH_HEADER_START_WITH)) {
+
+            if (request.getRequestURI().startsWith("/favicon.ico")) {
+                return;
+            }
+            if (authHeader == null || !authHeader.startsWith(jwtService.AUTH_HEADER_START_WITH)) {
                 filterChain.doFilter(request, response);
                 return;
             }
-            jwtToken = authHeader.substring(AUTH_HEADER_START_WITH.length());
-            var pattern = Pattern.compile("\\..+\\.");
-            var matcher = pattern.matcher(jwtToken);
-            String payload;
-            if (matcher.find()) {
-                payload = new String(Base64.getDecoder().decode(jwtToken.substring(matcher.start() + 1, matcher.end() - 1)));
-                System.out.println(payload);
-            } else throw new ParseJwtException(HttpStatus.BAD_REQUEST, "Could not parse auth JWT");
+            var checksum = deviceInfoService.calculateHeadersChecksum(request);
+            jwtToken = authHeader.substring(jwtService.AUTH_HEADER_START_WITH.length());
 
             username = jwtService.extractUsername(jwtToken, TokenType.ACCESS);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 var userDetails = this.userDetailsService.loadUserByUsername(username);
-                if (jwtService.isTokenValid(jwtToken, userDetails, TokenType.ACCESS)) {
+                if (jwtService.isAuthTokenValid(jwtToken, userDetails, checksum, TokenType.ACCESS)) {
                     var authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
@@ -74,6 +70,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             new WebAuthenticationDetailsSource().buildDetails(request)
                     );
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                } else {
+                    //TODO:
+                    throw new BaseException(HttpStatus.UNAUTHORIZED, "Invalid access token");
                 }
             }
             filterChain.doFilter(request, response);
@@ -89,7 +88,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                         .message(e.getMessage())
                                         .description(description.toString())
                                         .statusCode(HttpStatus.UNAUTHORIZED.value())
-                                        .time(LocalDateTime.now())
+                                        .time(LocalDateTime.now().toString())
                                         .build()
                         )
                 );
@@ -103,13 +102,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                         .message(ex.getMessage())
                                         .description(description.toString())
                                         .statusCode(HttpStatus.BAD_REQUEST.value())
-                                        .time(LocalDateTime.now())
+                                        .time(LocalDateTime.now().toString())
                                         .build()
                         )
                 );
             }
-
         }
-
     }
 }

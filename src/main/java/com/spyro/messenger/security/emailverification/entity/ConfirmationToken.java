@@ -37,6 +37,4 @@ public class ConfirmationToken {
         this.createdDate = LocalDateTime.now();
         this.token = DigestUtils.sha3_256Hex(user.getUsername());
     }
-
-    // getters and setters
 }

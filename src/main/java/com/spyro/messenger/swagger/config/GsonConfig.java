@@ -10,10 +10,10 @@ import java.time.format.DateTimeFormatter;
 
 @Configuration
 public class GsonConfig {
-//    @Bean
-//    JsonDeserializer<LocalDateTime> localDateJsonDeserializer() {
-//        return (jsonElement, type, jsonDeserializationContext) -> LocalDateTime.parse(jsonElement.getAsString(), DateTimeFormatter.ISO_DATE_TIME);
-//    }
+    @Bean
+    JsonDeserializer<LocalDateTime> localDateJsonDeserializer() {
+        return (jsonElement, type, jsonDeserializationContext) -> LocalDateTime.parse(jsonElement.getAsString(), DateTimeFormatter.ISO_DATE_TIME);
+    }
 
     @Bean
     JsonSerializer<Json> springfoxJsonToGsonAdapter() {
@@ -23,7 +23,7 @@ public class GsonConfig {
     @Bean
     public Gson gson() {
         var gsonBuilder = new GsonBuilder();
-//        gsonBuilder.registerTypeAdapter(LocalDateTime.class, localDateJsonDeserializer());
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, localDateJsonDeserializer());
         gsonBuilder.registerTypeAdapter(Json.class, springfoxJsonToGsonAdapter());
         return gsonBuilder.setPrettyPrinting().create();
     }

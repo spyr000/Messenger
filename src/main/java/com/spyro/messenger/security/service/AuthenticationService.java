@@ -5,11 +5,15 @@ import com.spyro.messenger.security.dto.AuthenticationRequest;
 import com.spyro.messenger.security.dto.AuthenticationResponse;
 import com.spyro.messenger.security.dto.RefreshJwtRequest;
 import com.spyro.messenger.security.dto.RegistrationRequest;
+import com.spyro.messenger.user.entity.User;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface AuthenticationService {
-    void register(RegistrationRequest request);
+    User register(RegistrationRequest request);
 
-    AuthenticationResponse authenticate(AuthenticationRequest request);
+    AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletRequest httpServletRequest);
 
-    AuthenticationResponse refreshToken(RefreshJwtRequest request, boolean refreshTokenNeeded);
+    AuthenticationResponse refreshToken(RefreshJwtRequest request, HttpServletRequest httpServletRequest, boolean refreshTokenNeededp);
+
+    void logOut(String authHeader);
 }

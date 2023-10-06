@@ -1,4 +1,4 @@
-package com.spyro.messenger.user.repo.repo;
+package com.spyro.messenger.user.repo;
 
 import com.spyro.messenger.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

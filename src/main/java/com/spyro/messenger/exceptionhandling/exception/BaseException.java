@@ -7,8 +7,13 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class BaseException extends RuntimeException {
     protected HttpStatus httpStatus;
     protected String description;
+
+    public BaseException(HttpStatus httpStatus, String description) {
+        super(description);
+        this.httpStatus = httpStatus;
+        this.description = description;
+    }
 }

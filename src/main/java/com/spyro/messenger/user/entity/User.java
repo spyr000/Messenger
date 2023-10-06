@@ -1,10 +1,10 @@
 package com.spyro.messenger.user.entity;
 
-import com.spyro.messenger.security.entity.BlacklistToken;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +19,7 @@ import java.util.List;
 @Table(name="users")
 @Getter
 @Setter
+@ToString
 public class User implements Serializable, UserDetails {
 
     @Builder
@@ -67,6 +68,7 @@ public class User implements Serializable, UserDetails {
     @Email(message = "Email is not valid")
     private String email;
 
+    @ToString.Exclude
     @Column(name = "password", nullable = false)
     @Size(min = 8, max = 22, message = "Password length should be between 8 an 22 characters")
     private String password;
@@ -80,6 +82,7 @@ public class User implements Serializable, UserDetails {
     @Column(name="role", nullable = false)
     private Role role;
 
+    @ToString.Exclude
     @Column(name = "enabled")
     private boolean enabled;
 

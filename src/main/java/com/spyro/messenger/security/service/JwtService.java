@@ -8,13 +8,17 @@ import java.util.Map;
 import java.util.function.Function;
 
 public interface JwtService {
-    String generateToken(Map<String, Object> extraClaims, UserDetails userDetails, TokenType tokenType);
+    String AUTH_HEADER_START_WITH = "Bearer ";
+    String SESSION_ID_CLAIM_NAME = "ses";
+    String generateAuthToken(Map<String, Object> extraClaims, UserDetails userDetails, TokenType tokenType);
 
-    String generateToken(UserDetails userDetails, TokenType tokenType);
+    String generateAuthToken(UserDetails userDetails, String sessionId, TokenType tokenType);
 
-    boolean isTokenValid(String token, UserDetails userDetails, TokenType tokenType);
+    boolean isAuthTokenValid(String token, UserDetails userDetails, long checksum, TokenType tokenType);
 
     String extractUsername(String token, TokenType tokenType);
+
+    String extractSessionID(String token, TokenType tokenType);
 
     <T> T extractClaim(String token, Function<Claims, T> claimsExtractor, TokenType tokenType);
 }

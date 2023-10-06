@@ -3,7 +3,7 @@ package com.spyro.messenger.user.service.impl;
 
 import com.spyro.messenger.exceptionhandling.exception.EntityNotFoundException;
 import com.spyro.messenger.user.entity.User;
-import com.spyro.messenger.user.repo.repo.UserRepo;
+import com.spyro.messenger.user.repo.UserRepo;
 import com.spyro.messenger.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,5 +25,5 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(User user) { userRepo.save(user);}
+    public void save(User user) { userRepo.save(user);}
 }

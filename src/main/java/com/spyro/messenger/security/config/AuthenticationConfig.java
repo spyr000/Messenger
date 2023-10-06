@@ -41,7 +41,7 @@ public class AuthenticationConfig {
         return (request, response, authException) -> {
             var description = new StringBuilder();
             log.error(authException.getMessage(), authException);
-            var exceptionResponseMapper = httpServletUtilsService.modifyResponseContentType(request, response,description);
+            var exceptionResponseMapper = httpServletUtilsService.modifyResponseContentType(request, response, description);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write(
                     exceptionResponseMapper.writerWithDefaultPrettyPrinter().writeValueAsString(
@@ -49,7 +49,7 @@ public class AuthenticationConfig {
                                     .message(authException.getMessage())
                                     .description(description.toString())
                                     .statusCode(HttpStatus.UNAUTHORIZED.value())
-                                    .time(LocalDateTime.now())
+                                    .time(LocalDateTime.now().toString())
                                     .build()
                     )
             );
@@ -69,7 +69,7 @@ public class AuthenticationConfig {
                                     .message(accessDeniedException.getMessage())
                                     .description(description.toString())
                                     .statusCode(HttpStatus.FORBIDDEN.value())
-                                    .time(LocalDateTime.now())
+                                    .time(LocalDateTime.now().toString())
                                     .build()
                     ));
         };

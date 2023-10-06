@@ -5,8 +5,6 @@ import com.spyro.messenger.user.entity.User;
 
 public interface UserService {
     User getUser(String username);
-
     boolean userExists(User user);
-
-    void saveUser(User user);
+    void save(User user);
 }

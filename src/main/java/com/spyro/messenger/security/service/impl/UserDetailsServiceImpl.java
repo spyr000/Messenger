@@ -2,7 +2,7 @@ package com.spyro.messenger.security.service.impl;
 
 
 
-import com.spyro.messenger.user.repo.repo.UserRepo;
+import com.spyro.messenger.user.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
