@@ -8,12 +8,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @RequiredArgsConstructor
 @Service
 public class GeolocationServiceImpl implements GeolocationService {
     private final IPGeolocationAPI api;
     @Override
     public String getCountryCity(String ip) {
+        if (Objects.equals(ip, "0:0:0:0:0:0:0:1")) {
+            return "Unknown";
+        }
         var geolocationParams =
                 GeolocationParams.builder()
                         .withIPAddress(ip)

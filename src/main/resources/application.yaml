@@ -17,9 +17,7 @@ security:
     api-key: ${SECURITY_GEOLOCATION_APIKEY}
   email-verification:
     mail-sender-name: Message inc
-    subject: Please verify your registration
     confirmation-server-address: http://localhost:8080
-
   encryption:
     access-token:
       expiration-time: '604800000'
@@ -27,8 +25,9 @@ security:
     refresh-token:
       expiration-time: '1209600000'
       signing-key: R+jF202C6JeTuDPZZqjDGpKS9D7PwnQukzlNgwNlmUU4kZ0gtWGiIOXIzFHgxn3QO6UkcZBPtZMBFXXt9qlAUDNTKPfAylG/xRmZh9ghTjg=
-    confirmation-token:
-      signing-key: PrbGMDXQSlrvFu76M9lpPcWoENIdgCKtrr7ZWqIhR1fm8nPNri182Y4ia3A+aDkoyFr0bEq3wH7gay5Kth6StDDRgrexDn4vX49B7FzTujg=
+app:
+  time-for-account-confirmation: '60000'
+  time-for-account-recovery: '60000'
 spring:
   jpa:
     database: postgresql

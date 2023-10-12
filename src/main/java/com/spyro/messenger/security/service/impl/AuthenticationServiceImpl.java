@@ -7,7 +7,7 @@ import com.spyro.messenger.security.dto.AuthenticationRequest;
 import com.spyro.messenger.security.dto.AuthenticationResponse;
 import com.spyro.messenger.security.dto.RefreshJwtRequest;
 import com.spyro.messenger.security.dto.RegistrationRequest;
-import com.spyro.messenger.security.emailverification.service.EmailSenderService;
+import com.spyro.messenger.emailverification.service.EmailSenderService;
 import com.spyro.messenger.security.misc.TokenType;
 import com.spyro.messenger.security.repo.SessionRepo;
 import com.spyro.messenger.security.service.AuthenticationService;
@@ -20,6 +20,7 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,13 +33,12 @@ import java.io.UnsupportedEncodingException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-
     private final AuthenticationManager authenticationManager;
-
     private final EmailSenderService emailSenderService;
     private final DeviceInfoService deviceInfoService;
     private final SessionService sessionService;
@@ -56,7 +56,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 Role.USER
         );
         try {
-            emailSenderService.sendEmail(user);
+            emailSenderService.sendAccountActivationMessage(user);
         } catch (MessagingException e) {
             throw new EmailSendingException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (UnsupportedEncodingException e) {
@@ -76,9 +76,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         throw new UsernameNotFoundException("User not found");
                     });
             if (!user.isEnabled()) {
-                throw new UnfinishedRegistrationException(
+                throw new AccountDisabledException(
                         HttpStatus.UNAUTHORIZED,
-                        "The authenticating user does not confirm registration by email"
+                        "The authenticating user account is disabled"
                 );
             }
             authenticationManager.authenticate(
@@ -100,8 +100,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var refreshToken = jwtService.generateAuthToken(user, session.getId(), TokenType.REFRESH);
         return new AuthenticationResponse(accessToken, refreshToken);
     }
-
-
     @Override
     public AuthenticationResponse refreshToken(
             RefreshJwtRequest request,
@@ -113,9 +111,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 jwtService.extractUsername(refreshToken, TokenType.REFRESH)
         ).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         if (!user.isEnabled()) {
-            throw new UnfinishedRegistrationException(
+            throw new AccountDisabledException(
                     HttpStatus.UNAUTHORIZED,
-                    "The authenticating user does not confirm registration by email"
+                    "The authenticating user account is disabled"
             );
         }
         var checksum = deviceInfoService.calculateHeadersChecksum(httpServletRequest);
@@ -133,7 +131,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional(rollbackOn = Exception.class)
     public void logOut(String authHeader) {
         var sessionId = jwtService.extractSessionID(
-                authHeader.substring(jwtService.AUTH_HEADER_START_WITH.length()),
+                JwtService.extractBearerToken(authHeader),
                 TokenType.ACCESS
         );
         sessionRepo.deleteById(sessionId);

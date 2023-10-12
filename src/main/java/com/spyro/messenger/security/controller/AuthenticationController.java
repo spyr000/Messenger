@@ -1,6 +1,7 @@
 package com.spyro.messenger.security.controller;
 
 
+import com.spyro.messenger.security.deviceinfoparsing.service.DeviceInfoService;
 import com.spyro.messenger.security.dto.AuthenticationRequest;
 import com.spyro.messenger.security.dto.AuthenticationResponse;
 import com.spyro.messenger.security.dto.RefreshJwtRequest;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
-    private final SessionService sessionService;
+    private final DeviceInfoService deviceInfoService;
 
     @Transactional(rollbackOn = Exception.class)
     @PostMapping(
@@ -32,11 +33,10 @@ public class AuthenticationController {
             produces = {"application/json", "application/xml", "application/x-yaml"}
     )
     public ResponseEntity<?> register(
-            @RequestBody RegistrationRequest body, HttpServletRequest request
+            @RequestBody RegistrationRequest body
     ) {
         authenticationService.register(body);
-        return ResponseEntity.ok()
-                .body("The confirmation link has been successfully sent to your email!");
+        return ResponseEntity.ok("The confirmation link has been successfully sent to your email!");
     }
 
     @PostMapping(
@@ -46,6 +46,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest body, HttpServletRequest request
     ) {
+        log.info("Authentication request from this device:" + deviceInfoService.getDeviceInfo(request));
         return ResponseEntity.ok(authenticationService.authenticate(body, request));
     }
 
@@ -56,6 +57,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> token(
             @RequestBody RefreshJwtRequest body, HttpServletRequest request
     ) {
+        log.info("Access token request from this device:" + deviceInfoService.getDeviceInfo(request));
         return ResponseEntity.ok(authenticationService.refreshToken(body, request, false));
     }
 
@@ -66,6 +68,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> refresh(
             @RequestBody RefreshJwtRequest body, HttpServletRequest request
     ) {
+        log.info("Refresh token request from this device:" + deviceInfoService.getDeviceInfo(request));
         return ResponseEntity.ok(authenticationService.refreshToken(body, request, true));
     }
 

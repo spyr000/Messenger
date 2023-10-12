@@ -33,7 +33,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final HttpServletUtilsService httpServletUtilsService;
-
     private final DeviceInfoService deviceInfoService;
 
     @Override
@@ -46,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwtToken;
         final String username;
         try {
-
+            var url = request.getRequestURI();
             if (request.getRequestURI().startsWith("/favicon.ico")) {
                 return;
             }
@@ -55,12 +54,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
             var checksum = deviceInfoService.calculateHeadersChecksum(request);
-            jwtToken = authHeader.substring(jwtService.AUTH_HEADER_START_WITH.length());
+            jwtToken = JwtService.extractBearerToken(authHeader);
 
             username = jwtService.extractUsername(jwtToken, TokenType.ACCESS);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 var userDetails = this.userDetailsService.loadUserByUsername(username);
-                if (jwtService.isAuthTokenValid(jwtToken, userDetails, checksum, TokenType.ACCESS)) {
+                if (
+                        jwtService.isAuthTokenValid(jwtToken, userDetails, checksum, TokenType.ACCESS) || (
+                                url.endsWith("/recover") && jwtService.isAuthTokenValidForDisabledUser(
+                                        jwtToken, userDetails, checksum, TokenType.ACCESS
+                                )
+                        )
+                ) {
                     var authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,

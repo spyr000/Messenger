@@ -19,7 +19,8 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Session getExistingOrSaveNew(User user, long checksum) {
-        var session = sessionRepo.findByUser_UsernameAndChecksum(user.getUsername(), checksum);
+//        var session = sessionRepo.findByUser_UsernameAndChecksum(user.getUsername(), checksum);
+        var session = sessionRepo.findSessionByUsernameAndChecksum(user.getUsername(), checksum);
         if (session == null) {
             session = sessionRepo.save(new Session(user, checksum));
             log.info("Session %s saved".formatted(session.toString()));

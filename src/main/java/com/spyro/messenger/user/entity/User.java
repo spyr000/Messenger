@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +22,6 @@ import java.util.List;
 @Setter
 @ToString
 public class User implements Serializable, UserDetails {
-
     @Builder
     public User(String email,
                 String password,
@@ -36,7 +36,8 @@ public class User implements Serializable, UserDetails {
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
-        this.enabled = false;
+        this.confirmed = false;
+        this.activated = true;
     }
 
     public User(String email,
@@ -50,12 +51,14 @@ public class User implements Serializable, UserDetails {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.enabled = false;
+        this.confirmed = false;
+        this.activated = true;
     }
     public User() {
-        this.enabled = false;
+        this.confirmed = false;
     }
 
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id", nullable = false)
@@ -64,10 +67,12 @@ public class User implements Serializable, UserDetails {
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
+    @JsonIgnore
     @Column(name = "email", unique = true, nullable = false)
     @Email(message = "Email is not valid")
     private String email;
 
+    @JsonIgnore
     @ToString.Exclude
     @Column(name = "password", nullable = false)
     @Size(min = 8, max = 22, message = "Password length should be between 8 an 22 characters")
@@ -78,46 +83,50 @@ public class User implements Serializable, UserDetails {
     @Column(name="user_last_name", nullable = false)
     private String lastName;
 
+    @JsonIgnore
     @Enumerated(EnumType.STRING)
     @Column(name="role", nullable = false)
     private Role role;
 
+    @JsonIgnore
     @ToString.Exclude
-    @Column(name = "enabled")
-    private boolean enabled;
+    @Column(name = "confirmed")
+    private boolean confirmed;
+
+    @JsonIgnore
+    @ToString.Exclude
+    @Column(name = "activated")
+    private boolean activated;
+
+    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "additional_info_id", unique = true)
+    private AdditionalInfo additionalInfo;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
-
     @Override
     public String getPassword() {
         return password;
     }
-
     @Override
     public String getUsername() {
         return username;
     }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
-
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
-
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
-    @Override
     public boolean isEnabled() {
-        return this.enabled;
+        return this.confirmed && this.activated;
     }
 }

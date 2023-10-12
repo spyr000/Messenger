@@ -23,8 +23,7 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
     @Override
     public String getDeviceInfo(HttpServletRequest request) {
         return new StringBuilder(HttpServletUtilsService.getUAInformation(request))
-                .append(',')
-                .append(' ')
+                .append(", ")
                 .append(geolocationService.getCountryCity(request))
                 .toString();
     }

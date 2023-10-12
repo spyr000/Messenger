@@ -1,7 +1,6 @@
 package com.spyro.messenger.security.service.impl;
 
 
-import com.spyro.messenger.exceptionhandling.exception.BaseException;
 import com.spyro.messenger.security.misc.TokenType;
 import com.spyro.messenger.security.service.JwtService;
 import com.spyro.messenger.security.service.SessionService;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -39,10 +37,6 @@ public class JwtServiceImpl implements JwtService {
             UserDetails userDetails,
             TokenType tokenType
     ) {
-        if (tokenType == TokenType.CONFIRMATION) {
-            //TODO:
-            throw new BaseException(HttpStatus.BAD_REQUEST,"Unsupported type of token");
-        }
         String expirationTime = tokenType.equals(TokenType.ACCESS)
                 ? env.getProperty("security.encryption.access-token.expiration-time")
                 : env.getProperty("security.encryption.refresh-token.expiration-time");
@@ -73,16 +67,37 @@ public class JwtServiceImpl implements JwtService {
         final var username = extractUsername(token, tokenType);
         final var sessionId = extractSessionID(token, tokenType);
         return (username.equals(userDetails.getUsername())) &&
-                !isTokenExpired(token, tokenType) &&
+                isTokenNotExpired(token, tokenType) &&
                 userDetails.isEnabled() &&
-                sessionService.isActive(sessionId, userDetails,
+                sessionService.isActive(
+                        sessionId,
+                        userDetails,
                         checksum,
-                        (foundSession) -> {/*TODO:*/log.warn("Session %s checksum mismatch: %s".formatted(foundSession,checksum)); }
+                        (foundSession) -> log.warn("Session %s checksum mismatch: %s".formatted(foundSession,checksum))
                 );
     }
 
-    private boolean isTokenExpired(String token, TokenType tokenType) {
-        return extractExpiration(token, tokenType).before(new Date());
+    @Override
+    public boolean isAuthTokenValidForDisabledUser(
+            String token,
+            UserDetails userDetails,
+            long checksum,
+            TokenType tokenType
+    ) {
+        final var username = extractUsername(token, tokenType);
+        final var sessionId = extractSessionID(token, tokenType);
+        return (username.equals(userDetails.getUsername())) &&
+                isTokenNotExpired(token, tokenType) &&
+                sessionService.isActive(
+                        sessionId,
+                        userDetails,
+                        checksum,
+                        (foundSession) -> log.warn("Session %s checksum mismatch: %s".formatted(foundSession,checksum))
+                );
+    }
+
+    private boolean isTokenNotExpired(String token, TokenType tokenType) {
+        return !extractExpiration(token, tokenType).before(new Date());
     }
 
     private Date extractExpiration(String token, TokenType tokenType) {
@@ -115,14 +130,9 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Key getSignInKey(TokenType tokenType) {
-        String signingKey;
-        if (tokenType == TokenType.ACCESS) {
-            signingKey = env.getProperty("security.encryption.access-token.signing-key");
-        } else if (tokenType == TokenType.REFRESH) {
-            signingKey = env.getProperty("security.encryption.refresh-token.signing-key");
-        } else {
-            signingKey = env.getProperty("security.encryption.confirmation-token.signing-key");
-        }
+        String signingKey = tokenType == TokenType.ACCESS ?
+                env.getProperty("security.encryption.access-token.signing-key") :
+                env.getProperty("security.encryption.refresh-token.signing-key");
         return Keys.hmacShaKeyFor(
                 Decoders
                         .BASE64

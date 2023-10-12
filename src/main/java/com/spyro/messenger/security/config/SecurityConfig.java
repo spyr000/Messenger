@@ -1,5 +1,6 @@
 package com.spyro.messenger.security.config;
 
+import com.spyro.messenger.emailverification.util.ConfirmationUrls;
 import com.spyro.messenger.security.filter.JwtAuthenticationFilter;
 import jakarta.servlet.ServletException;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +38,9 @@ public class SecurityConfig {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
+        var configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("*"));
+//        configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -88,12 +90,13 @@ public class SecurityConfig {
                                         "/webjars/**",
                                         "/swagger-ui/**",
                                         "/swagger-ui.html",
-                                        "/api/v1/confirmation/**",
                                         "/api/v1/auth/register",
                                         "/api/v1/auth/authenticate",
                                         "/api/v1/auth/token",
-                                        "/favicon.ico"
+                                        "/favicon.ico",
+                                        ConfirmationUrls.CONFIRMATION_URL+"/**"
                                 ).permitAll()
+//                                .requestMatchers("/**").permitAll()
                                 .requestMatchers("/api/v1/**").hasAnyRole("USER", "ADMIN")
                                 .anyRequest().authenticated()
                 )
