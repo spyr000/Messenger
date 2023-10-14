@@ -2,7 +2,7 @@ package com.spyro.messenger.emailverification.util;
 
 public abstract class ConfirmationUrls {
     public static final String CONFIRMATION_PARAMETER_NAME = "token";
-    public static final String CONFIRMATION_PREFIX = "/confirmation";
+    public static final String CONFIRMATION_PREFIX = "/confirm";
     public static final String CONFIRMATION_URL = "/api/v1" + CONFIRMATION_PREFIX;
     public static final String FULL_CONFIRMATION_URL_PATTERN = new StringBuilder("%s")
             .append(CONFIRMATION_URL)

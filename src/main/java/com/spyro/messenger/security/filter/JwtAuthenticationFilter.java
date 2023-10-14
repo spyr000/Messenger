@@ -1,8 +1,8 @@
 package com.spyro.messenger.security.filter;
 
 
-import com.spyro.messenger.exceptionhandling.exception.BaseException;
-import com.spyro.messenger.exceptionhandling.exception.ErrorMessage;
+import com.spyro.messenger.exceptionhandling.dto.ErrorMessage;
+import com.spyro.messenger.exceptionhandling.exception.InvalidAccessTokenException;
 import com.spyro.messenger.security.deviceinfoparsing.service.DeviceInfoService;
 import com.spyro.messenger.security.misc.TokenType;
 import com.spyro.messenger.security.service.HttpServletUtilsService;
@@ -76,8 +76,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     );
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 } else {
-                    //TODO:
-                    throw new BaseException(HttpStatus.UNAUTHORIZED, "Invalid access token");
+                    throw new InvalidAccessTokenException(HttpStatus.UNAUTHORIZED, "Invalid access token");
                 }
             }
             filterChain.doFilter(request, response);

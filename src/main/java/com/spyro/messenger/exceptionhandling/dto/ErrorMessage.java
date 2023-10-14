@@ -1,4 +1,4 @@
-package com.spyro.messenger.exceptionhandling.exception;
+package com.spyro.messenger.exceptionhandling.dto;
 
 import lombok.Builder;
 import lombok.Getter;

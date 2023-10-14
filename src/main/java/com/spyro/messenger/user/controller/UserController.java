@@ -1,7 +1,15 @@
 package com.spyro.messenger.user.controller;
 
+import com.spyro.messenger.exceptionhandling.exception.EntityNotFoundException;
+import com.spyro.messenger.friends.dto.FriendsDto;
+import com.spyro.messenger.friends.entity.FriendRequest;
+import com.spyro.messenger.friends.repo.FriendRequestRepo;
+import com.spyro.messenger.friends.service.FriendRequestService;
 import com.spyro.messenger.user.dto.*;
+import com.spyro.messenger.user.entity.User;
+import com.spyro.messenger.user.repo.UserRepo;
 import com.spyro.messenger.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -15,31 +23,42 @@ public class UserController {
 
     private final long accountRecoveryTime;
     private final UserService userService;
+    private final FriendRequestService friendRequestService;
 
     public UserController(
             @Value("${app.time-for-account-recovery}") String accountRecoveryTime,
-            UserService userService
+            UserService userService,
+            FriendRequestService friendRequestService
     ) {
         this.accountRecoveryTime = Long.parseLong(accountRecoveryTime);
         this.userService = userService;
+        this.friendRequestService = friendRequestService;
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<UserResponse> getByUsername(
-            @PathVariable("username") String username
+    public ResponseEntity<BriefUserResponse> getByUsername(
+            @PathVariable("username") String username,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
     ) {
-        return ResponseEntity.ok(userService.getUser(username));
+        return ResponseEntity.ok(userService.getUser(authHeader, username));
+    }
+    @GetMapping(value = "/{username}", params = "friends")
+    public ResponseEntity<FriendsDto> getFriendshipList(
+            @RequestParam("username") String username,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
+    ) {
+        return ResponseEntity.ok(friendRequestService.getFriends(authHeader, username));
     }
 
-    @PostMapping("/change-user-info")
-    public ResponseEntity<UserResponse> changeUnimportantInfo(
+    @PutMapping(value = "/edit", params = "info")
+    public ResponseEntity<FullUserResponse> changeAdditionalInfo(
             @RequestBody UserInfoChangeRequest userInfoChangeRequest,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
     ) {
         return ResponseEntity.ok(userService.changeUnimportantInfo(authHeader, userInfoChangeRequest));
     }
 
-    @PostMapping("/change-password")
+    @PutMapping(value = "/edit", params = "password")
     public ResponseEntity<?> changePassword(
             @RequestBody ChangePasswordRequest changePasswordRequest,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
@@ -48,7 +67,7 @@ public class UserController {
         return ResponseEntity.ok("Your password has been successfully changed");
     }
 
-    @PostMapping("/change-username")
+    @PutMapping(value = "/edit", params = "username")
     public ResponseEntity<?> changePassword(
             @RequestBody ChangeUsernameRequest changeUsernameRequest,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
@@ -57,7 +76,7 @@ public class UserController {
         return ResponseEntity.ok("Your username has been successfully changed");
     }
 
-    @PostMapping("/change-email")
+    @PutMapping(value = "/edit", params = "email")
     public ResponseEntity<?> changeEmail(
             @RequestBody ChangeEmailRequest changeEmailRequest,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader

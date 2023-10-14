@@ -2,6 +2,7 @@ package com.spyro.messenger.emailverification.config;
 
 
 import com.spyro.messenger.exceptionhandling.exception.BaseException;
+import com.spyro.messenger.exceptionhandling.exception.UnableToReadHtmlException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
@@ -19,8 +20,7 @@ public class EmailVerificationConfig {
             try {
                 return resource.getContentAsString(charset);
             } catch (IOException e) {
-                //TODO: make exception class
-                throw new BaseException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+                throw new UnableToReadHtmlException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
             }
         };
     }

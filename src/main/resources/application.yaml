@@ -26,7 +26,6 @@ security:
       expiration-time: '1209600000'
       signing-key: R+jF202C6JeTuDPZZqjDGpKS9D7PwnQukzlNgwNlmUU4kZ0gtWGiIOXIzFHgxn3QO6UkcZBPtZMBFXXt9qlAUDNTKPfAylG/xRmZh9ghTjg=
 app:
-  time-for-account-confirmation: '60000'
   time-for-account-recovery: '60000'
 spring:
   jpa:

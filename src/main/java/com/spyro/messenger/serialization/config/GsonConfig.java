@@ -1,22 +1,25 @@
-package com.spyro.messenger.swagger.config;
+package com.spyro.messenger.serialization.config;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.google.gson.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.spring.web.json.Json;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Configuration
 public class GsonConfig {
     @Bean
-    JsonDeserializer<LocalDateTime> localDateJsonDeserializer() {
-        return (jsonElement, type, jsonDeserializationContext) -> LocalDateTime.parse(jsonElement.getAsString(), DateTimeFormatter.ISO_DATE_TIME);
+    public JsonDeserializer<LocalDateTime> localDateJsonDeserializer() {
+        return (json, type, context) -> LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ISO_DATE_TIME);
     }
 
     @Bean
-    JsonSerializer<Json> springfoxJsonToGsonAdapter() {
+    public JsonSerializer<Json> springfoxJsonToGsonAdapter() {
         return (json, type, context) -> JsonParser.parseString(json.value());
     }
 

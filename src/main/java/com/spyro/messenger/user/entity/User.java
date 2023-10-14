@@ -36,6 +36,7 @@ public class User implements Serializable, UserDetails {
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
+        this.restrictions = new UserRestrictions();
         this.confirmed = false;
         this.activated = true;
     }
@@ -51,6 +52,7 @@ public class User implements Serializable, UserDetails {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.restrictions = new UserRestrictions();
         this.confirmed = false;
         this.activated = true;
     }
@@ -101,6 +103,9 @@ public class User implements Serializable, UserDetails {
     @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "additional_info_id", unique = true)
     private AdditionalInfo additionalInfo;
+
+    @Embedded
+    private UserRestrictions restrictions;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

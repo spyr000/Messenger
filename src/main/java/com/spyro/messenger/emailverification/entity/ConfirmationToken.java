@@ -63,7 +63,7 @@ public class ConfirmationToken {
         ObjectOutputStream os = null;
         try {
             os = new ObjectOutputStream(bos);
-            os.writeObject(user);
+            os.writeObject(user.toString());
             os.writeObject(LocalDateTime.now());
         } catch (IOException e) {
             throw new BaseException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());

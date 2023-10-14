@@ -1,54 +1,51 @@
 package com.spyro.messenger.messaging.controller;
 
-import com.spyro.messenger.messaging.entity.ChatMessage;
-import com.spyro.messenger.messaging.entity.ChatNotification;
-import com.spyro.messenger.messaging.service.ChatMessageService;
-import com.spyro.messenger.messaging.service.ChatRoomService;
+import com.spyro.messenger.exceptionhandling.exception.EntityNotFoundException;
+import com.spyro.messenger.exceptionhandling.exception.UnableToSendMessageForThisUserException;
+import com.spyro.messenger.friends.repo.FriendRequestRepo;
+import com.spyro.messenger.messaging.dto.HistoryResponse;
+import com.spyro.messenger.messaging.dto.MessageRequest;
+import com.spyro.messenger.messaging.entity.Chat;
+import com.spyro.messenger.messaging.entity.Message;
+import com.spyro.messenger.messaging.repo.ChatRepo;
+import com.spyro.messenger.messaging.repo.MessageRepo;
+import com.spyro.messenger.messaging.service.MessagingService;
+import com.spyro.messenger.user.entity.User;
+import com.spyro.messenger.user.repo.UserRepo;
+import com.spyro.messenger.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.NestedExceptionUtils;
-import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
+import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/api/v1/messages")
 @RequiredArgsConstructor
 public class MessagingController {
-    private final SimpMessagingTemplate messagingTemplate;
-    private final ChatMessageService chatMessageService;
-    private final ChatRoomService chatRoomService;
-
-    @MessageMapping("/chat")
-    public void processMessage(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor simpMessageHeaderAccessor) {
-        System.out.println(chatMessage);
-//        var chatId = chatRoomService
-//                .getChatId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true);
-        var chat = chatRoomService.getChat(chatMessage.getSender().getId(), chatMessage.getRecipient().getId());
-//        chatMessage.setChatId(chatId.get());
-        var userName = Objects.requireNonNull(simpMessageHeaderAccessor.getUser()).getName();
-
-        ChatMessage saved = chatMessageService.save(chatMessage);
-
-        messagingTemplate.convertAndSendToUser(
-                String.valueOf(chatMessage.getRecipient().getId()),"/queue/messages",
-                new ChatNotification(
-                        saved.getId(),
-                        saved.getSender().getId(),
-                        saved.getSender().getUsername()
-                )
-        );
+    private final UserRepo userRepo;
+    private final FriendRequestRepo friendRequestRepo;
+    private final UserService userService;
+    private final MessagingService messagingService;
+    private final ChatRepo chatRepo;
+    private final MessageRepo messageRepo;
+    @PostMapping(value = "/{username}", params = "send")
+    public ResponseEntity<?> send(
+            @PathVariable("username") String addresseeUsername,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
+            @RequestBody MessageRequest messageRequest
+    ) {
+        messagingService.sendMessage(authHeader, addresseeUsername, messageRequest);
+        return ResponseEntity.ok("Message sent");
     }
 
-    @MessageExceptionHandler
-    @SendTo("/user/errors")
-    public String handleException(IllegalArgumentException e) {
-        var message = ("an exception occurred! " + NestedExceptionUtils.getMostSpecificCause(e));
-        System.out.println(message);
-        return message;
+    @GetMapping("/{username}")
+    public HistoryResponse getChatHistory(
+            @PathVariable("username") String addresseeUsername,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
+    ) {
+        return messagingService.getChatHistory(authHeader, addresseeUsername);
     }
 }

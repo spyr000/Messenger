@@ -15,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 @RequiredArgsConstructor
 @Slf4j
 public class ConfirmationController {
-
     private final ConfirmationService confirmationService;
 
     @RequestMapping(

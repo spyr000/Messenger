@@ -1,7 +1,7 @@
 package com.spyro.messenger.security.config;
 
 
-import com.spyro.messenger.exceptionhandling.exception.ErrorMessage;
+import com.spyro.messenger.exceptionhandling.dto.ErrorMessage;
 import com.spyro.messenger.security.service.HttpServletUtilsService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

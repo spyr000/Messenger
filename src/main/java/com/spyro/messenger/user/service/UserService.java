@@ -7,18 +7,15 @@ import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.Async;
 
 public interface UserService {
-    UserResponse getUser(String username);
-    UserResponse changeUnimportantInfo(String authHeader, UserInfoChangeRequest request);
-    void changePassword(String authHeader, ChangePasswordRequest request);
-    void changeUsername(String authHeader, ChangeUsernameRequest request);
-    void changeEmail(String authHeader, ChangeEmailRequest changeEmailRequest);
-    void deactivate(String authHeader);
-    @Async
-    @Transactional(rollbackOn = Exception.class)
-    void scheduleDeleting(User user, long delay);
+    BriefUserResponse getUser(String requesterAuthHeader, String addresseeUsername);
+    FullUserResponse changeUnimportantInfo(String requesterAuthHeader, UserInfoChangeRequest request);
+    void changePassword(String requesterAuthHeader, ChangePasswordRequest request);
+    void changeUsername(String requesterAuthHeader, ChangeUsernameRequest request);
+    void changeEmail(String requesterAuthHeader, ChangeEmailRequest changeEmailRequest);
 
-    void recover(String authHeader);
+    void changeRestrictions(String requesterAuthHeader, UserRestrictionsRequest request);
 
-    @Transactional
-    void deleteAllUsersToDelete();
+    void deactivate(String requesterAuthHeader);
+    void recover(String requesterAuthHeader);
+    User extractUser(String requesterAuthHeader);
 }

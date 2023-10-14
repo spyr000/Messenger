@@ -3,7 +3,7 @@ package com.spyro.messenger.exceptionhandling.advice;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spyro.messenger.exceptionhandling.exception.BaseException;
-import com.spyro.messenger.exceptionhandling.exception.ErrorMessage;
+import com.spyro.messenger.exceptionhandling.dto.ErrorMessage;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.mail.MessagingException;

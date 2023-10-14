@@ -21,9 +21,8 @@ public class UserInfoChangeRequest implements Serializable {
     private AdditionalInfoDto additionalInfo;
     private String firstName;
     private String lastName;
-
     @JsonProperty("additionalInfo")
-    private void unpackNested(Map<String,Object> additionalInfoMap) {
+    private void parseAdditionalInfo(Map<String,Object> additionalInfoMap) {
         this.additionalInfo = new AdditionalInfoDto(
                 additionalInfoMap.get("bio").toString(),
                 additionalInfoMap.get("status").toString(),

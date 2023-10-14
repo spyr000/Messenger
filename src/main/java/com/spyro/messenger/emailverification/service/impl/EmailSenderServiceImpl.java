@@ -29,7 +29,6 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
     private final EmailMessageBuilderService emailMessageBuilderService;
 
-    @Async
     @Override
     public void sendAccountActivationMessage(User user) throws MessagingException, UnsupportedEncodingException {
         if (userRepo.existsByUsername(user.getUsername())) throw new EntityAlreadyExistsException(User.class);

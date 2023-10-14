@@ -1,6 +1,7 @@
 package com.spyro.messenger.security.deviceinfoparsing.service.impl;
 
 import com.spyro.messenger.exceptionhandling.exception.BaseException;
+import com.spyro.messenger.exceptionhandling.exception.UnableToCalculateHeaderChecksumException;
 import com.spyro.messenger.security.deviceinfoparsing.service.DeviceInfoService;
 import com.spyro.messenger.security.deviceinfoparsing.service.GeolocationService;
 import com.spyro.messenger.security.service.HttpServletUtilsService;
@@ -37,8 +38,7 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
             objectOut.writeObject(headers);
             byteOut.flush();
         } catch (IOException e) {
-            //TODO:
-            throw new BaseException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            throw new UnableToCalculateHeaderChecksumException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
         return getCRC32Checksum(byteOut.toByteArray());
     }

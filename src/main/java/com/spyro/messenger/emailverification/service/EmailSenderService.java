@@ -26,7 +26,7 @@ public interface EmailSenderService {
                 );
     }
 
-    @Async
+
     void sendAccountActivationMessage(User user) throws MessagingException, UnsupportedEncodingException;
 
     @Async
