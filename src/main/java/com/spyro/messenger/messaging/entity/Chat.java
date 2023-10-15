@@ -28,7 +28,7 @@ public class Chat {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private User member;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "chat_id")
     private List<Message> messages = new ArrayList<>();
 
@@ -36,11 +36,6 @@ public class Chat {
         this.initiator = initiator;
         this.member = member;
     }
-//    public Chat update(Message message, ChatRepo chatRepo) {
-//        if (message == null) return  this;
-//        messages.add(message);
-//        return chatRepo.save(this);
-//    }
     public void addMessage(Message message) {
         if (message == null) return;
         messages.add(message);

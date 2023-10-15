@@ -19,7 +19,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker( "/user");
+        config.enableSimpleBroker( "/topic");
         config.setApplicationDestinationPrefixes("/app");
         config.setUserDestinationPrefix("/user");
     }
@@ -27,10 +27,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry
-                .addEndpoint("/ws")
+                .addEndpoint("/api/v2/chat")
                 .setAllowedOrigins("*");
         registry
-                .addEndpoint("/ws")
+                .addEndpoint("/api/v2/chat")
                 .setAllowedOrigins("*")
                 .withSockJS();
     }
@@ -45,4 +45,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         messageConverters.add(converter);
         return false;
     }
+
 }

@@ -25,12 +25,8 @@ import java.util.List;
 @RequestMapping("/api/v1/messages")
 @RequiredArgsConstructor
 public class MessagingController {
-    private final UserRepo userRepo;
-    private final FriendRequestRepo friendRequestRepo;
-    private final UserService userService;
     private final MessagingService messagingService;
-    private final ChatRepo chatRepo;
-    private final MessageRepo messageRepo;
+
     @PostMapping(value = "/{username}", params = "send")
     public ResponseEntity<?> send(
             @PathVariable("username") String addresseeUsername,
