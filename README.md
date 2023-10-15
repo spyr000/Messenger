@@ -71,7 +71,7 @@
 ![access token](https://github.com/spyr000/Messenger/assets/93257337/5e5857cc-252c-44bd-b6ac-91b03623e9f8)
 
 ### Генерация access и refresh токена при отправлении защищенного запроса с валидными access и refresh токенами
-![image](https://github.com/spyr000/Messenger/assets/93257337/ceb8f96c-dc0d-4ee8-9b39-b674a14914f7)
+![image](https://github.com/spyr000/Messenger/assets/93257337/f8383ba1-1232-4bc8-85ab-8b176eed3cf2)
 
 ## Выход из системы
 ![logout](https://github.com/spyr000/Messenger/assets/93257337/49271f86-95dd-4a22-88f5-ef0a4b2e18a0)
