@@ -4,7 +4,6 @@ import com.spyro.messenger.exceptionhandling.exception.EntityNotFoundException;
 import com.spyro.messenger.exceptionhandling.exception.UnableToProcessFriendRequestException;
 import com.spyro.messenger.friends.dto.FriendsDto;
 import com.spyro.messenger.friends.entity.FriendRequest;
-import com.spyro.messenger.friends.entity.FriendRequestCondition;
 import com.spyro.messenger.friends.misc.FriendRequestsParams;
 import com.spyro.messenger.friends.repo.FriendRequestRepo;
 import com.spyro.messenger.friends.service.FriendRequestService;
@@ -127,7 +126,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     @Override
     public Map<String, String> getMySentFriendRequests(String authHeader) {
         var sender = userService.extractUser(authHeader);
-        var sentRequests = friendRequestRepo.findBySenderAndConditionIsNotContaining(sender, FriendRequestCondition.APPROVED);
+        var sentRequests = friendRequestRepo.findSentRequests(sender);
         Map<String, String> usersAndRequestConditions = new HashMap<>();
         for (var request : sentRequests) {
             usersAndRequestConditions.put(request.getRecipient().getUsername(), request.getCondition().toString());
@@ -138,8 +137,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     @Override
     public Map<String, String> getMyReceivedFriendRequests(String authHeader) {
         var recipient = userService.extractUser(authHeader);
-        var sentRequests = friendRequestRepo
-                .findByRecipientAndConditionIsNotContaining(recipient, FriendRequestCondition.APPROVED);
+        var sentRequests = friendRequestRepo.findReceivedRequests(recipient);
         Map<String, String> usersAndRequestConditions = new HashMap<>();
         for (var request : sentRequests) {
             usersAndRequestConditions.put(request.getSender().getUsername(), request.getCondition().toString());
@@ -150,10 +148,14 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     @Override
     public FriendsDto getFriends(String authHeader, String username) {
         var user = userService.extractUser(authHeader);
-        if (!user.getUsername().equals(username) && user.getRestrictions().isFriendsHiddenFromEveryone()) {
+        var requestedUser = userRepo.findByUsername(username)
+                .orElseThrow(() -> {
+                    throw new EntityNotFoundException(User.class);
+                });
+        if (!user.getUsername().equals(username) && requestedUser.getRestrictions().isFriendsHiddenFromEveryone()) {
             return new FriendsDto(List.of());
         }
-        return new FriendsDto(getFriendsUsernames(user));
+        return new FriendsDto(getFriendsUsernames(requestedUser));
     }
 
     private List<String> getFriendsUsernames(User user) {

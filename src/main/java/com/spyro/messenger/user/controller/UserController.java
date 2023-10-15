@@ -57,7 +57,7 @@ public class UserController {
     @GetMapping(value = "/{username}", params = "friends")
     public ResponseEntity<FriendsDto> getFriendshipList(
             @Parameter(name = "username", description = "Requested user username")
-            @RequestParam("username")
+            @PathVariable("username")
             String username,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
     ) {
@@ -131,7 +131,7 @@ public class UserController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
     ) {
         userService.changeRestrictions(authHeader, changeUserRestrictionsRequest);
-        return ResponseEntity.ok("The confirmation link has been successfully sent to your email!");
+        return ResponseEntity.ok("Your restrictions has been successfully changed");
     }
 
     @Operation(

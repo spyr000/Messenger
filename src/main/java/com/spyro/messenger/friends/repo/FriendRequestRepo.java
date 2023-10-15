@@ -12,15 +12,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FriendRequestRepo extends JpaRepository<FriendRequest, String> {
+    @Query("select f from FriendRequest f where f.sender = ?1 and f.condition <> 'APPROVED'")
+    List<FriendRequest> findSentRequests(User sender);
     @Transactional
     @Modifying
     @Query("delete from FriendRequest f where f.sender = ?1 or f.recipient = ?1")
     void deleteAllByUser(User user);
-
-    List<FriendRequest> findBySenderAndConditionIsNotContaining(User sender, FriendRequestCondition condition);
-
-    List<FriendRequest> findByRecipientAndConditionIsNotContaining(User recipient, FriendRequestCondition approved);
-
+    @Query("select f from FriendRequest f where f.recipient = ?1 and f.condition <> 'APPROVED'")
+    List<FriendRequest> findReceivedRequests(User recipient);
     @Query("select f from FriendRequest f where (f.sender = ?1 and f.recipient = ?2) or (f.sender = ?2 and f.recipient = ?1)")
     Optional<FriendRequest> findByTwoFriends(User sender, User recipient);
 

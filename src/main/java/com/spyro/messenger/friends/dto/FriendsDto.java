@@ -15,5 +15,5 @@ import java.util.List;
 @AllArgsConstructor
 public class FriendsDto {
     @JsonAdapter(CollectionSerializer.class)
-    private List<String> friendRequests;
+    private List<String> friends;
 }
