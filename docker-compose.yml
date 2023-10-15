@@ -1,0 +1,72 @@
+version: '2.1'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    env_file:
+      - .env
+    environment:
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
+      POSTGRES_DB: ${POSTGRES_DB_NAME}
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-U", "postgres" ]
+      interval: 5s
+      timeout: 1s
+      retries: 2
+    restart: always
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:5050"
+    restart: unless-stopped
+
+  spring-boot:
+    image: business-service-spring-boot:0.0.5
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-boot
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+      SPRING_ENABLE_LIQUIBASE: ${SPRING_ENABLE_LIQUIBASE}
+      SPRING_ENABLE_LIQUIBASE_DROP_FIRST: ${SPRING_ENABLE_LIQUIBASE_DROP_FIRST}
+      APP_TIME_FOR_ACCOUNT_RECOVERY: ${APP_TIME_FOR_ACCOUNT_RECOVERY}
+      SECURITY_ACCESS_TOKEN_EXPIRATION_TIME: ${APP_TIME_FOR_ACCOUNT_RECOVERY}
+      SECURITY_ACCESS_TOKEN_SIGNING_KEY: ${SECURITY_ACCESS_TOKEN_SIGNING_KEY}
+      SECURITY_REFRESH_TOKEN_EXPIRATION_TIME: ${SECURITY_REFRESH_TOKEN_EXPIRATION_TIME}
+      SECURITY_REFRESH_TOKEN_SIGNING_KEY: ${SECURITY_REFRESH_TOKEN_SIGNING_KEY}
+      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
+      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
+    ports:
+      - "8080:8080"
+      - "57628:57628"
+    volumes:
+      - spring-boot:/data/spring-boot
+
+volumes:
+  postgres-volume: {}
+  pgadmin: {}
+  spring-boot: {}
