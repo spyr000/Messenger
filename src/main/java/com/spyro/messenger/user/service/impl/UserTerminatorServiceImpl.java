@@ -1,6 +1,7 @@
 package com.spyro.messenger.user.service.impl;
 
 import com.spyro.messenger.friends.repo.FriendRequestRepo;
+import com.spyro.messenger.messaging.repo.ChatRepo;
 import com.spyro.messenger.security.repo.SessionRepo;
 import com.spyro.messenger.user.entity.User;
 import com.spyro.messenger.user.entity.UserToDeleteRepo;
@@ -27,6 +28,7 @@ public class UserTerminatorServiceImpl implements UserTerminatorService {
     private final UserRepo userRepo;
     private final UserToDeleteRepo userToDeleteRepo;
     private final SessionRepo sessionRepo;
+    private final ChatRepo chatRepo;
     private final TaskScheduler scheduler;
 
     @Transactional(rollbackOn = Exception.class)
@@ -63,6 +65,7 @@ public class UserTerminatorServiceImpl implements UserTerminatorService {
                                 sessionRepo.deleteAllByUserUsername(foundUser.getUsername());
                                 sessionRepo.flush();
                                 friendRequestRepo.deleteAllByUser(foundUser);
+                                chatRepo.deleteByInitiatorOrMember(user, user);
                                 userToDeleteRepo.deleteByUser(foundUser);
                                 userRepo.delete(foundUser);
                                 log.info("User %s has been deleted".formatted(foundUser.getUsername()));

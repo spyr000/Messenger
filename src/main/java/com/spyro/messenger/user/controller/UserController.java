@@ -143,7 +143,10 @@ public class UserController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
     ) {
         userService.deactivate(authHeader);
-        return ResponseEntity.ok("Your request to delete your account has been registered. You can recover your account within the next %d days, %d hours, %d minutes"
+        return ResponseEntity.ok(("""
+                Your request to delete your account has been registered.
+                You can recover it within the next:
+                %d days, %d hours, %d minutes""")
                 .formatted(
                         TimeUnit.MILLISECONDS.toDays(accountRecoveryTime),
                         TimeUnit.MILLISECONDS.toHours(accountRecoveryTime),
