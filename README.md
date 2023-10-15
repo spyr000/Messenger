@@ -71,7 +71,7 @@
 ![access token](https://github.com/spyr000/Messenger/assets/93257337/5e5857cc-252c-44bd-b6ac-91b03623e9f8)
 
 ### Генерация access и refresh токена при отправлении защищенного запроса с валидными access и refresh токенами
-![refresh token refreshed](https://github.com/spyr000/Messenger/assets/93257337/efb3c0a7-aea6-4f47-99e8-1f834f31047f)
+![image](https://github.com/spyr000/Messenger/assets/93257337/ceb8f96c-dc0d-4ee8-9b39-b674a14914f7)
 
 ## Выход из системы
 ![logout](https://github.com/spyr000/Messenger/assets/93257337/49271f86-95dd-4a22-88f5-ef0a4b2e18a0)
@@ -83,7 +83,7 @@
 ![edit username ](https://github.com/spyr000/Messenger/assets/93257337/222cb1f7-d713-48f9-88cd-1721935cd1e2)
 
 ## Смена почты
-![edit email confirmation link sent](https://github.com/spyr000/Messenger/assets/93257337/de09bf7f-2ac2-4899-8c6f-1cdd7603ab97)
+![image](https://github.com/spyr000/Messenger/assets/93257337/9a369ef9-105f-4102-b4f0-72776f99026b)
 
 ### Сообщение пришедшее на почту
 ![click on link to verify email](https://github.com/spyr000/Messenger/assets/93257337/4d43b2d2-a626-4a9d-9502-25cd62ef3d91)
