@@ -1,32 +1,28 @@
 openapi:
   info:
-    title: ${OPENAPI_INFO_TITLE:-Application API}
-    description: ${OPENAPI_INFO_DESCRIPTION:-description}
+    title: ${OPENAPI_INFO_TITLE:-Messenger API}
+    description: ${OPENAPI_INFO_DESCRIPTION:-simplified messenger functionality}
     version: ${OPENAPI_INFO_VERSION:-v1.0}
     licence:
       name: ${OPENAPI_INFO_LICENCE_NAME:-Apache 2.0}
       url: ${OPENAPI_INFO_LICENCE_URL:-http://springdoc.org}
     contact:
-      name: ${OPENAPI_INFO_CONTACT_NAME:-username}
-      email: ${OPENAPI_INFO_CONTACT_EMAIL:-test@gmail.com}
+      name: ${OPENAPI_INFO_CONTACT_NAME:-spyro}
+      email: ${OPENAPI_INFO_CONTACT_EMAIL:-al_matjuhin@mail.ru}
   servers: '${OPENAPI_SERVERS:{"localhost:8080":"Dev server"}}'
-
-
 security:
-  geolocation-api:
-    api-key: ${SECURITY_GEOLOCATION_APIKEY}
   email-verification:
     mail-sender-name: Message inc
     confirmation-server-address: http://localhost:8080
   encryption:
     access-token:
-      expiration-time: '604800000'
-      signing-key: tO8LeGFYHpx5xP0i8SAVqgpvaVwN+rwrqyTlndBAnaZmP6R+a43E+NzDXi36gbm/HAFnl7TCShg90nk4eMA0pXIIiZGAfIqWUporw+k6XR4=
+      expiration-time: ${SECURITY_ACCESS_TOKEN_EXPIRATION_TIME:-'604800000'}
+      signing-key: ${SECURITY_ACCESS_TOKEN_SIGNING_KEY:-}
     refresh-token:
-      expiration-time: '1209600000'
-      signing-key: R+jF202C6JeTuDPZZqjDGpKS9D7PwnQukzlNgwNlmUU4kZ0gtWGiIOXIzFHgxn3QO6UkcZBPtZMBFXXt9qlAUDNTKPfAylG/xRmZh9ghTjg=
+      expiration-time: ${SECURITY_REFRESH_TOKEN_EXPIRATION_TIME:-'1209600000'}
+      signing-key: ${SECURITY_REFRESH_TOKEN_SIGNING_KEY:-}
 app:
-  time-for-account-recovery: '60000'
+  time-for-account-recovery: ${APP_TIME_FOR_ACCOUNT_RECOVERY:-'60000'}
 spring:
   jpa:
     database: postgresql
@@ -69,7 +65,6 @@ server:
   error:
     include-binding-errors: always
     include-message: always
-
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

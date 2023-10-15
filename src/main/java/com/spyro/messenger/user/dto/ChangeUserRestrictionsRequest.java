@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRestrictionsRequest {
+public class ChangeUserRestrictionsRequest {
     private Boolean messagesAllowedFromFriendsOnly;
     private Boolean friendsHiddenFromEveryone;
 }

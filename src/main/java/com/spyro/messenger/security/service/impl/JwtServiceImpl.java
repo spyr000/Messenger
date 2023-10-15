@@ -30,7 +30,6 @@ public class JwtServiceImpl implements JwtService {
     private final Environment env;
     private final SessionService sessionService;
 
-    //CHECKED
     @Override
     public String generateAuthToken(
             Map<String, Object> extraClaims,
@@ -73,7 +72,7 @@ public class JwtServiceImpl implements JwtService {
                         sessionId,
                         userDetails,
                         checksum,
-                        (foundSession) -> log.warn("Session %s checksum mismatch: %s".formatted(foundSession,checksum))
+                        (foundSession) -> log.warn("Session %s checksum mismatch: %s".formatted(foundSession, checksum))
                 );
     }
 
@@ -92,7 +91,7 @@ public class JwtServiceImpl implements JwtService {
                         sessionId,
                         userDetails,
                         checksum,
-                        (foundSession) -> log.warn("Session %s checksum mismatch: %s".formatted(foundSession,checksum))
+                        (foundSession) -> log.warn("Session %s checksum mismatch: %s".formatted(foundSession, checksum))
                 );
     }
 

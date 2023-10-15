@@ -1,35 +1,34 @@
 package com.spyro.messenger.messaging.controller;
 
-import com.spyro.messenger.exceptionhandling.exception.EntityNotFoundException;
-import com.spyro.messenger.exceptionhandling.exception.UnableToSendMessageForThisUserException;
-import com.spyro.messenger.friends.repo.FriendRequestRepo;
 import com.spyro.messenger.messaging.dto.HistoryResponse;
 import com.spyro.messenger.messaging.dto.MessageRequest;
-import com.spyro.messenger.messaging.entity.Chat;
-import com.spyro.messenger.messaging.entity.Message;
-import com.spyro.messenger.messaging.repo.ChatRepo;
-import com.spyro.messenger.messaging.repo.MessageRepo;
 import com.spyro.messenger.messaging.service.MessagingService;
-import com.spyro.messenger.user.entity.User;
-import com.spyro.messenger.user.repo.UserRepo;
-import com.spyro.messenger.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/messages")
 @RequiredArgsConstructor
+@Tag(name = "Messaging", description = "The Messaging API")
+@SecurityRequirement(name = "JWT")
 public class MessagingController {
     private final MessagingService messagingService;
 
+    @Operation(
+            summary = "Sending message to user",
+            description = "Allows you to send message to user"
+    )
     @PostMapping(value = "/{username}", params = "send")
     public ResponseEntity<?> send(
-            @PathVariable("username") String addresseeUsername,
+            @Parameter(name = "username", description = "Requested user username")
+            @PathVariable("username")
+            String addresseeUsername,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
             @RequestBody MessageRequest messageRequest
     ) {
@@ -37,9 +36,15 @@ public class MessagingController {
         return ResponseEntity.ok("Message sent");
     }
 
+    @Operation(
+            summary = "Getting chat history",
+            description = "Allows you to get chat history"
+    )
     @GetMapping("/{username}")
     public HistoryResponse getChatHistory(
-            @PathVariable("username") String addresseeUsername,
+            @Parameter(name = "username", description = "Requested user username")
+            @PathVariable("username")
+            String addresseeUsername,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
     ) {
         return messagingService.getChatHistory(authHeader, addresseeUsername);

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 class ContentNegotiationConfig implements WebMvcConfigurer {
     @Value("${spring.mvc.contentnegotiation.default-type}")
     private String defaultContentNegotiationType;
+
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         configurer
@@ -21,7 +22,4 @@ class ContentNegotiationConfig implements WebMvcConfigurer {
                 .mediaType("xml", MediaType.APPLICATION_XML);
 
     }
-
-
-
 }

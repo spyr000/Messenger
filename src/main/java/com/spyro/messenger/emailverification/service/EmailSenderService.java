@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.Async;
 import java.io.UnsupportedEncodingException;
 
 public interface EmailSenderService {
-
     default String buildConfirmRegistrationUrl(String confirmationServerAddress, String token) {
         return ConfirmationUrls.FULL_CONFIRMATION_URL_PATTERN
                 .formatted(
@@ -17,6 +16,7 @@ public interface EmailSenderService {
                         token
                 );
     }
+
     default String buildConfirmEmailChangeUrl(String confirmationServerAddress, String token) {
         return ConfirmationUrls.FULL_CONFIRMATION_URL_PATTERN
                 .formatted(
@@ -25,7 +25,6 @@ public interface EmailSenderService {
                         token
                 );
     }
-
 
     void sendAccountActivationMessage(User user) throws MessagingException, UnsupportedEncodingException;
 

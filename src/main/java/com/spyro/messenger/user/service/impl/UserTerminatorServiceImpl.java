@@ -28,6 +28,7 @@ public class UserTerminatorServiceImpl implements UserTerminatorService {
     private final UserToDeleteRepo userToDeleteRepo;
     private final SessionRepo sessionRepo;
     private final TaskScheduler scheduler;
+
     @Transactional(rollbackOn = Exception.class)
     @Async
     @Override
@@ -47,6 +48,7 @@ public class UserTerminatorServiceImpl implements UserTerminatorService {
         if (deletedUsersAmount > 0) log.info("%d users has been deleted".formatted(deletedUsersAmount));
         scheduleDeletingAllUsersToDelete();
     }
+
     @Transactional(rollbackOn = Exception.class)
     @Async
     @Override

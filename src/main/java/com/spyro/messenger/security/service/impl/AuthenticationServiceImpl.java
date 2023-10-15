@@ -1,16 +1,19 @@
 package com.spyro.messenger.security.service.impl;
 
 
-import com.spyro.messenger.exceptionhandling.exception.*;
-import com.spyro.messenger.security.deviceinfoparsing.service.DeviceInfoService;
+import com.spyro.messenger.emailverification.service.EmailSenderService;
+import com.spyro.messenger.exceptionhandling.exception.AccountDisabledException;
+import com.spyro.messenger.exceptionhandling.exception.BaseException;
+import com.spyro.messenger.exceptionhandling.exception.EmailSendingException;
+import com.spyro.messenger.exceptionhandling.exception.InvalidRefreshTokenException;
 import com.spyro.messenger.security.dto.AuthenticationRequest;
 import com.spyro.messenger.security.dto.AuthenticationResponse;
 import com.spyro.messenger.security.dto.RefreshJwtRequest;
 import com.spyro.messenger.security.dto.RegistrationRequest;
-import com.spyro.messenger.emailverification.service.EmailSenderService;
 import com.spyro.messenger.security.misc.TokenType;
 import com.spyro.messenger.security.repo.SessionRepo;
 import com.spyro.messenger.security.service.AuthenticationService;
+import com.spyro.messenger.security.service.DeviceInfoService;
 import com.spyro.messenger.security.service.JwtService;
 import com.spyro.messenger.security.service.SessionService;
 import com.spyro.messenger.user.entity.Role;
@@ -44,9 +47,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final SessionService sessionService;
     private final SessionRepo sessionRepo;
 
-    //CHECKED
     @Override
-    public User register(RegistrationRequest request) {
+    public void register(RegistrationRequest request) {
         var user = new User(
                 request.getEmail(),
                 passwordEncoder.encode(request.getPassword()),
@@ -62,11 +64,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } catch (UnsupportedEncodingException e) {
             throw new EmailSendingException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
-        return user;
     }
 
-
-    //CHECKED
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletRequest httpServletRequest) {
         User user;
@@ -100,6 +99,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var refreshToken = jwtService.generateAuthToken(user, session.getId(), TokenType.REFRESH);
         return new AuthenticationResponse(accessToken, refreshToken);
     }
+
     @Override
     public AuthenticationResponse refreshToken(
             RefreshJwtRequest request,
@@ -120,7 +120,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!jwtService.isAuthTokenValid(refreshToken, user, checksum, TokenType.REFRESH)) {
             throw new InvalidRefreshTokenException(HttpStatus.UNAUTHORIZED, "Invalid refresh token");
         }
-        var sessionId = jwtService.extractSessionID(refreshToken,TokenType.REFRESH);
+        var sessionId = jwtService.extractSessionID(refreshToken, TokenType.REFRESH);
         return new AuthenticationResponse(
                 jwtService.generateAuthToken(user, sessionId, TokenType.ACCESS),
                 refreshTokenNeeded ? jwtService.generateAuthToken(user, sessionId, TokenType.REFRESH) : refreshToken

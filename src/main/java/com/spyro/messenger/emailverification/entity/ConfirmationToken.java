@@ -8,23 +8,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.http.HttpStatus;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
+@Entity
+@Table(
+        name = "confirmation_tokens",
+        indexes = @Index(name = "conf_token_index", columnList = "token")
+)
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-@Table(name = "confirmation_tokens")
 public class ConfirmationToken {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @UuidGenerator
     @Column(name = "token_id", nullable = false)
     private String id;
     @Column(name = "token", unique = true)
@@ -39,7 +41,6 @@ public class ConfirmationToken {
     @Enumerated(EnumType.STRING)
     @Column(name = "token_type", nullable = false)
     private ConfirmationTokenType tokenType;
-
     @Column(name = "extra_field")
     private String extraField;
 

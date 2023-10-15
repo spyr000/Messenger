@@ -6,10 +6,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
-import org.springframework.data.jpa.domain.AbstractAuditable;
 
 @Entity
-@Table(name = "friend_requests", uniqueConstraints = {@UniqueConstraint(columnNames = {"sender_id", "recipient_id"})})
+@Table(
+        name = "friend_requests",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"sender_id", "recipient_id"})},
+        indexes = {
+                @Index(name = "sender_index", columnList = "sender_id"),
+                @Index(name = "recipient_index", columnList = "recipient_id"),
+                @Index(name = "sender_and_recipient_index", columnList = "sender_id, recipient_id", unique = true)
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,7 +32,6 @@ public class FriendRequest {
     @OneToOne
     @JoinColumn(name = "recipient_id")
     private User recipient;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "request_condition")
     private FriendRequestCondition condition;

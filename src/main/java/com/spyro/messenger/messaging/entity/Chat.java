@@ -1,6 +1,5 @@
 package com.spyro.messenger.messaging.entity;
 
-import com.spyro.messenger.messaging.repo.ChatRepo;
 import com.spyro.messenger.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,7 +12,11 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "chats", uniqueConstraints = {@UniqueConstraint(columnNames = {"initiator_id", "member_id"})})
+@Table(
+        name = "chats",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"initiator_id", "member_id"})},
+        indexes = @Index(name = "chat_index", columnList = "initiator_id, member_id", unique = true)
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,6 +39,7 @@ public class Chat {
         this.initiator = initiator;
         this.member = member;
     }
+
     public void addMessage(Message message) {
         if (message == null) return;
         messages.add(message);

@@ -1,6 +1,9 @@
 package com.spyro.messenger.swagger.config;
 
 
+import com.spyro.messenger.emailverification.util.ConfirmationUrls;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
@@ -15,7 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 @Configuration
+@SecurityScheme(
+        name = "JWT",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        scheme = "bearer"
+)
 public class OpenApiConfig {
     @Bean
     public GroupedOpenApi authenticationApi() {
@@ -49,6 +59,14 @@ public class OpenApiConfig {
     }
 
     @Bean
+    public GroupedOpenApi confirmationApi() {
+        return GroupedOpenApi.builder()
+                .group("Confirmation")
+                .pathsToMatch(ConfirmationUrls.CONFIRMATION_URL + "/**")
+                .build();
+    }
+
+    @Bean
     public OpenAPI customOpenApi(@Value("${openapi.info.description}") String appDescription,
                                  @Value("${openapi.info.version}") String appVersion,
                                  @Value("${openapi.info.title}") String title,
@@ -56,10 +74,10 @@ public class OpenApiConfig {
                                  @Value("${openapi.info.licence.url}") String licenseUrl,
                                  @Value("${openapi.info.contact.name}") String contactName,
                                  @Value("${openapi.info.contact.email}") String contactEmail,
-                                 @Value("#{${openapi.servers}}") Map<String,String> serversMap
+                                 @Value("#{${openapi.servers}}") Map<String, String> serversMap
     ) {
         List<Server> servers = new ArrayList<>();
-        for (String key: serversMap.keySet()) {
+        for (String key : serversMap.keySet()) {
             servers.add(new Server().url(key).description(serversMap.get(key)));
         }
         return new OpenAPI()

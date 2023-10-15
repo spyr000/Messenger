@@ -1,7 +1,6 @@
 package com.spyro.messenger.emailverification.config;
 
 
-import com.spyro.messenger.exceptionhandling.exception.BaseException;
 import com.spyro.messenger.exceptionhandling.exception.UnableToReadHtmlException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +14,7 @@ import java.util.function.Function;
 @Configuration
 public class EmailVerificationConfig {
     @Bean
-    public Function<Resource,String> htmlReader(Charset charset) {
+    public Function<Resource, String> htmlReader(Charset charset) {
         return resource -> {
             try {
                 return resource.getContentAsString(charset);

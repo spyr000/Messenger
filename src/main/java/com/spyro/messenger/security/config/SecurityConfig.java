@@ -47,7 +47,6 @@ public class SecurityConfig {
         return source;
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -93,9 +92,8 @@ public class SecurityConfig {
                                         "/api/v1/auth/authenticate",
                                         "/api/v1/auth/token",
                                         "/favicon.ico",
-                                        ConfirmationUrls.CONFIRMATION_URL+"/**"
+                                        ConfirmationUrls.CONFIRMATION_URL + "/**"
                                 ).permitAll()
-//                                .requestMatchers("/**").permitAll()
                                 .requestMatchers("/api/v1/**").hasAnyRole("USER", "ADMIN")
                                 .anyRequest().authenticated()
                 )
@@ -107,6 +105,4 @@ public class SecurityConfig {
                 .httpBasic(withDefaults());
         return http.build();
     }
-
-
 }

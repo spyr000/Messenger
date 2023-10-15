@@ -2,9 +2,9 @@ package com.spyro.messenger.emailverification.service.impl;
 
 
 import com.spyro.messenger.emailverification.entity.ConfirmationToken;
-import com.spyro.messenger.exceptionhandling.exception.BaseException;
 import com.spyro.messenger.emailverification.repo.ConfirmationTokenRepo;
 import com.spyro.messenger.emailverification.service.ConfirmationService;
+import com.spyro.messenger.exceptionhandling.exception.BaseException;
 import com.spyro.messenger.security.misc.ConfirmationTokenType;
 import com.spyro.messenger.user.entity.User;
 import com.spyro.messenger.user.repo.UserRepo;

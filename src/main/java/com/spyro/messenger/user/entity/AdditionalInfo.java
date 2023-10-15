@@ -3,9 +3,10 @@ package com.spyro.messenger.user.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
-@Table(name="additional_info")
+@Table(name = "additional_info")
 @Getter
 @Setter
 @ToString
@@ -21,7 +22,7 @@ public class AdditionalInfo {
 
     @JsonIgnore
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @UuidGenerator
     @Column(name = "additional_info_id", nullable = false)
     private String id;
     @Column(name = "bio", nullable = false)

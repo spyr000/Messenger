@@ -3,8 +3,8 @@ package com.spyro.messenger.security.filter;
 
 import com.spyro.messenger.exceptionhandling.dto.ErrorMessage;
 import com.spyro.messenger.exceptionhandling.exception.InvalidAccessTokenException;
-import com.spyro.messenger.security.deviceinfoparsing.service.DeviceInfoService;
 import com.spyro.messenger.security.misc.TokenType;
+import com.spyro.messenger.security.service.DeviceInfoService;
 import com.spyro.messenger.security.service.HttpServletUtilsService;
 import com.spyro.messenger.security.service.JwtService;
 import jakarta.servlet.FilterChain;
@@ -29,7 +29,6 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final HttpServletUtilsService httpServletUtilsService;
@@ -61,7 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 var userDetails = this.userDetailsService.loadUserByUsername(username);
                 if (
                         jwtService.isAuthTokenValid(jwtToken, userDetails, checksum, TokenType.ACCESS) || (
-                                url.endsWith("/recover") && jwtService.isAuthTokenValidForDisabledUser(
+                                url.equals("/api/v1/user/recover") && jwtService.isAuthTokenValidForDisabledUser(
                                         jwtToken, userDetails, checksum, TokenType.ACCESS
                                 )
                         )

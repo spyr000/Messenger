@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
     private final EmailSenderService emailSenderService;
     private final PasswordEncoder passwordEncoder;
     private final UserTerminatorService terminatorService;
+
     public UserServiceImpl(
             @Value("${app.time-for-account-recovery}")
             String accountRecoveryTime,
@@ -61,6 +62,7 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
         this.terminatorService = terminatorService;
     }
+
     @Override
     public BriefUserResponse getUser(String requesterAuthHeader, String addresseeUsername) {
         var requester = extractUser(requesterAuthHeader);
@@ -143,8 +145,9 @@ public class UserServiceImpl implements UserService {
             throw new EmailSendingException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+
     @Override
-    public void changeRestrictions(String requesterAuthHeader, UserRestrictionsRequest request) {
+    public void changeRestrictions(String requesterAuthHeader, ChangeUserRestrictionsRequest request) {
         var user = extractUser(requesterAuthHeader);
         var messagesRestriction = request.getMessagesAllowedFromFriendsOnly();
         var friendsRestriction = request.getMessagesAllowedFromFriendsOnly();
@@ -158,6 +161,7 @@ public class UserServiceImpl implements UserService {
         user.setRestrictions(restrictions);
         userRepo.save(user);
     }
+
     @Override
     public void deactivate(String requesterAuthHeader) {
         var user = extractUser(requesterAuthHeader);
@@ -177,6 +181,7 @@ public class UserServiceImpl implements UserService {
         user.setActivated(true);
         userRepo.save(user);
     }
+
     @Override
     public User extractUser(String requesterAuthHeader) {
         var username = jwtService.extractUsername(
@@ -185,10 +190,11 @@ public class UserServiceImpl implements UserService {
         );
         return userRepo.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(User.class));
     }
+
     private List<String> getFriendsUsernames(User user) {
         var friends = friendRequestRepo.findAllFriends(user);
         List<String> friendsUsernames = new ArrayList<>();
-        for (var friend: friends) {
+        for (var friend : friends) {
             friendsUsernames.add(friend.getUsername());
         }
         return friendsUsernames;

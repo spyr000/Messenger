@@ -21,8 +21,9 @@ public class UserInfoChangeRequest implements Serializable {
     private AdditionalInfoDto additionalInfo;
     private String firstName;
     private String lastName;
+
     @JsonProperty("additionalInfo")
-    private void parseAdditionalInfo(Map<String,Object> additionalInfoMap) {
+    private void parseAdditionalInfo(Map<String, Object> additionalInfoMap) {
         this.additionalInfo = new AdditionalInfoDto(
                 additionalInfoMap.get("bio").toString(),
                 additionalInfoMap.get("status").toString(),
@@ -36,7 +37,7 @@ public class UserInfoChangeRequest implements Serializable {
         if (this.additionalInfo == null) return user;
         var info = user.getAdditionalInfo();
         if (info == null) info = new AdditionalInfo();
-        if (this.additionalInfo.getBio() != null) info.setBio(this.additionalInfo.getBio() );
+        if (this.additionalInfo.getBio() != null) info.setBio(this.additionalInfo.getBio());
         if (this.additionalInfo.getStatus() != null) info.setStatus(this.additionalInfo.getStatus());
         if (this.additionalInfo.getAvatarBase64() != null) info.setAvatarBase64(this.additionalInfo.getAvatarBase64());
         user.setAdditionalInfo(info);

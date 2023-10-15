@@ -10,6 +10,7 @@ import lombok.Setter;
 public class UserRestrictions {
     private boolean messagesAllowedFromFriendsOnly;
     private boolean friendsHiddenFromEveryone;
+
     public UserRestrictions() {
         this.messagesAllowedFromFriendsOnly = false;
         this.friendsHiddenFromEveryone = false;

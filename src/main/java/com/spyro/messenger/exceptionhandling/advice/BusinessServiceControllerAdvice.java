@@ -2,8 +2,8 @@ package com.spyro.messenger.exceptionhandling.advice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spyro.messenger.exceptionhandling.exception.BaseException;
 import com.spyro.messenger.exceptionhandling.dto.ErrorMessage;
+import com.spyro.messenger.exceptionhandling.exception.BaseException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.mail.MessagingException;
@@ -32,7 +32,6 @@ import java.util.function.Function;
 public class BusinessServiceControllerAdvice {
     @Value("${spring.mvc.contentnegotiation.parameter-name}")
     private String formatParameterName;
-
     private final ObjectMapper objectMapper;
 
     private static ResponseEntity<ErrorMessage> buildResponse(

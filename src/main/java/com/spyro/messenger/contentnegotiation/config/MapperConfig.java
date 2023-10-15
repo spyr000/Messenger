@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class MapperConfig {
-
     @Bean
     @Primary
     ObjectMapper objectMapper() {
@@ -32,7 +31,6 @@ public class MapperConfig {
         return new XmlMapper()
                 .registerModule(new JavaTimeModule())
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
     }
 
     @Bean
@@ -40,6 +38,5 @@ public class MapperConfig {
         return new JsonMapper()
                 .registerModule(new JavaTimeModule())
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
     }
 }

@@ -14,6 +14,7 @@ public class BriefUserResponse {
     private String username;
     private String firstName;
     private String lastName;
+
     public static BriefUserResponse fromUser(User user) {
         return new BriefUserResponse(
                 user.getUsername(),

@@ -1,7 +1,6 @@
 package com.spyro.messenger.security.service.impl;
 
 
-
 import com.spyro.messenger.user.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

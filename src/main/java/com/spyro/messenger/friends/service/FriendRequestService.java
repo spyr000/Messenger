@@ -1,9 +1,7 @@
 package com.spyro.messenger.friends.service;
 
 import com.spyro.messenger.friends.dto.FriendsDto;
-import com.spyro.messenger.user.entity.User;
 
-import java.util.List;
 import java.util.Map;
 
 public interface FriendRequestService {

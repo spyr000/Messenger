@@ -14,6 +14,6 @@ public class Link {
 
     @Override
     public String toString() {
-        return LINK_PATTERN.formatted(url,text)+"[[link]]";
+        return LINK_PATTERN.formatted(url, text) + "[[link]]";
     }
 }

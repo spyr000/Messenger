@@ -68,7 +68,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
         var recipient = userRepo.findByUsername(recipientUsername)
                 .orElseThrow(() -> new EntityNotFoundException(User.class));
         if (!friendRequestRepo.existsBySenderAndRecipient(sender, recipient)) {
-            friendRequestRepo.save(new FriendRequest(sender,recipient));
+            friendRequestRepo.save(new FriendRequest(sender, recipient));
         }
     }
 
@@ -79,9 +79,10 @@ public class FriendRequestServiceImpl implements FriendRequestService {
                 .orElseThrow(() -> new EntityNotFoundException(User.class));
         var request = friendRequestRepo.findBySenderAndRecipient(sender, recipient)
                 .orElseThrow(() -> new EntityNotFoundException(FriendRequest.class));
-        if (!request.isDenied()){
+        if (!request.isDenied()) {
             friendRequestRepo.delete(request);
-        } else throw new UnableToProcessFriendRequestException(HttpStatus.BAD_REQUEST, "Unable to delete friend request");
+        } else
+            throw new UnableToProcessFriendRequestException(HttpStatus.BAD_REQUEST, "Unable to delete friend request");
     }
 
     public void approve(String authHeader, String senderUsername) {
@@ -92,7 +93,8 @@ public class FriendRequestServiceImpl implements FriendRequestService {
                 .orElseThrow(() -> new EntityNotFoundException(FriendRequest.class));
         if (request.approve()) {
             friendRequestRepo.save(request);
-        } else throw new UnableToProcessFriendRequestException(HttpStatus.BAD_REQUEST, "Unable to approve friend request");
+        } else
+            throw new UnableToProcessFriendRequestException(HttpStatus.BAD_REQUEST, "Unable to approve friend request");
     }
 
     public void deny(String authHeader, String senderUsername) {
@@ -125,9 +127,9 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     @Override
     public Map<String, String> getMySentFriendRequests(String authHeader) {
         var sender = userService.extractUser(authHeader);
-        var sentRequests  = friendRequestRepo.findBySenderAndConditionIsNotContaining(sender, FriendRequestCondition.APPROVED);
+        var sentRequests = friendRequestRepo.findBySenderAndConditionIsNotContaining(sender, FriendRequestCondition.APPROVED);
         Map<String, String> usersAndRequestConditions = new HashMap<>();
-        for (var request: sentRequests) {
+        for (var request : sentRequests) {
             usersAndRequestConditions.put(request.getRecipient().getUsername(), request.getCondition().toString());
         }
         return usersAndRequestConditions;
@@ -136,14 +138,15 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     @Override
     public Map<String, String> getMyReceivedFriendRequests(String authHeader) {
         var recipient = userService.extractUser(authHeader);
-        var sentRequests  = friendRequestRepo
+        var sentRequests = friendRequestRepo
                 .findByRecipientAndConditionIsNotContaining(recipient, FriendRequestCondition.APPROVED);
         Map<String, String> usersAndRequestConditions = new HashMap<>();
-        for (var request: sentRequests) {
+        for (var request : sentRequests) {
             usersAndRequestConditions.put(request.getSender().getUsername(), request.getCondition().toString());
         }
         return usersAndRequestConditions;
     }
+
     @Override
     public FriendsDto getFriends(String authHeader, String username) {
         var user = userService.extractUser(authHeader);
@@ -156,7 +159,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     private List<String> getFriendsUsernames(User user) {
         var friends = friendRequestRepo.findAllFriends(user);
         List<String> friendsUsernames = new ArrayList<>();
-        for (var friend: friends) {
+        for (var friend : friends) {
             friendsUsernames.add(friend.getUsername());
         }
         return friendsUsernames;

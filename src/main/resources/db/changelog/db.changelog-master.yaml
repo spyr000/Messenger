@@ -1,16 +1,7 @@
 databaseChangeLog:
   - changeSet:
-      id: 1696334061062-1
-      author: mrzed (generated)
-      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
-      changes:
-        - createSequence:
-            incrementBy: 50
-            sequenceName: confirmation_tokens_seq
-            startValue: 1
-  - changeSet:
-      id: 1696334061062-2
-      author: mrzed (generated)
+      id: 1697373284048-1
+      author: spyro (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
         - createSequence:
@@ -18,8 +9,84 @@ databaseChangeLog:
             sequenceName: users_seq
             startValue: 1
   - changeSet:
-      id: 1696334061062-3
-      author: mrzed (generated)
+      id: 1697373284048-2
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_active_sessions
+                  name: session_id
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: username
+                  type: VARCHAR
+              - column:
+                  constraints:
+                    nullable: false
+                  name: checksum
+                  type: BIGINT
+            tableName: active_sessions
+  - changeSet:
+      id: 1697373284048-3
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_additional_info
+                  name: additional_info_id
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: bio
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: avatar_base64
+                  type: VARCHAR(255)
+            tableName: additional_info
+  - changeSet:
+      id: 1697373284048-4
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_chats
+                  name: chat_id
+                  type: VARCHAR(255)
+              - column:
+                  name: initiator_id
+                  type: BIGINT
+              - column:
+                  name: member_id
+                  type: BIGINT
+            tableName: chats
+  - changeSet:
+      id: 1697373284048-5
+      author: spyro (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
         - createTable:
@@ -30,7 +97,7 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: pk_confirmation_tokens
                   name: token_id
-                  type: BIGINT
+                  type: VARCHAR(255)
               - column:
                   name: token
                   type: VARCHAR(255)
@@ -42,10 +109,74 @@ databaseChangeLog:
                     nullable: false
                   name: user_id
                   type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: token_type
+                  type: VARCHAR(255)
+              - column:
+                  name: extra_field
+                  type: VARCHAR(255)
             tableName: confirmation_tokens
   - changeSet:
-      id: 1696334061062-4
-      author: mrzed (generated)
+      id: 1697373284048-6
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_friend_requests
+                  name: friend_request_id
+                  type: VARCHAR(255)
+              - column:
+                  name: sender_id
+                  type: BIGINT
+              - column:
+                  name: recipient_id
+                  type: BIGINT
+              - column:
+                  name: request_condition
+                  type: VARCHAR(255)
+            tableName: friend_requests
+  - changeSet:
+      id: 1697373284048-7
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_messages
+                  name: message_id
+                  type: VARCHAR(255)
+              - column:
+                  name: sender_id
+                  type: BIGINT
+              - column:
+                  name: content
+                  type: VARCHAR(255)
+              - column:
+                  name: sending_time
+                  type: DATETIME
+              - column:
+                  constraints:
+                    nullable: false
+                  name: received
+                  type: BOOLEAN
+              - column:
+                  name: chat_id
+                  type: VARCHAR(255)
+            tableName: messages
+  - changeSet:
+      id: 1697373284048-8
+      author: spyro (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
         - createTable:
@@ -73,9 +204,13 @@ databaseChangeLog:
                   name: password
                   type: VARCHAR(255)
               - column:
+                  constraints:
+                    nullable: false
                   name: user_first_name
                   type: VARCHAR(255)
               - column:
+                  constraints:
+                    nullable: false
                   name: user_last_name
                   type: VARCHAR(255)
               - column:
@@ -84,12 +219,103 @@ databaseChangeLog:
                   name: role
                   type: VARCHAR(255)
               - column:
-                  name: enabled
+                  name: confirmed
+                  type: BOOLEAN
+              - column:
+                  name: activated
+                  type: BOOLEAN
+              - column:
+                  name: additional_info_id
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: messages_allowed_from_friends_only
+                  type: BOOLEAN
+              - column:
+                  constraints:
+                    nullable: false
+                  name: friends_hidden_from_everyone
                   type: BOOLEAN
             tableName: users
   - changeSet:
-      id: 1696334061062-5
-      author: mrzed (generated)
+      id: 1697373284048-9
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_users_to_delete
+                  name: user_to_delete_id
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: deactivation_time
+                  type: DATETIME
+              - column:
+                  constraints:
+                    nullable: false
+                  name: deleting_time
+                  type: DATETIME
+            tableName: users_to_delete
+  - changeSet:
+      id: 1697373284048-10
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: sender_id, recipient_id
+            constraintName: uc_2829c5cef098447b05a1cec61
+            tableName: friend_requests
+  - changeSet:
+      id: 1697373284048-11
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: initiator_id, member_id
+            constraintName: uc_3ecc341cc4b5bf27f65627b75
+            tableName: chats
+  - changeSet:
+      id: 1697373284048-12
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: username, checksum
+            constraintName: uc_b60011e650e4f05ee7a533c85
+            tableName: active_sessions
+  - changeSet:
+      id: 1697373284048-13
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: token
+            constraintName: uc_confirmation_tokens_token
+            tableName: confirmation_tokens
+  - changeSet:
+      id: 1697373284048-14
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: additional_info_id
+            constraintName: uc_users_additional_info
+            tableName: users
+  - changeSet:
+      id: 1697373284048-15
+      author: spyro (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
         - addUniqueConstraint:
@@ -97,8 +323,17 @@ databaseChangeLog:
             constraintName: uc_users_email
             tableName: users
   - changeSet:
-      id: 1696334061062-6
-      author: mrzed (generated)
+      id: 1697373284048-16
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: user_id
+            constraintName: uc_users_to_delete_user
+            tableName: users_to_delete
+  - changeSet:
+      id: 1697373284048-17
+      author: spyro (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
         - addUniqueConstraint:
@@ -106,8 +341,120 @@ databaseChangeLog:
             constraintName: uc_users_username
             tableName: users
   - changeSet:
-      id: 1696334061062-7
-      author: mrzed (generated)
+      id: 1697373284048-18
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: initiator_id
+              - column:
+                  name: member_id
+            indexName: chat_index
+            tableName: chats
+            unique: true
+  - changeSet:
+      id: 1697373284048-19
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: token
+            indexName: conf_token_index
+            tableName: confirmation_tokens
+  - changeSet:
+      id: 1697373284048-21
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: sending_time
+            indexName: message_time_index
+            tableName: messages
+  - changeSet:
+      id: 1697373284048-23
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: sender_id
+              - column:
+                  name: recipient_id
+            indexName: sender_and_recipient_index
+            tableName: friend_requests
+            unique: true
+  - changeSet:
+      id: 1697373284048-27
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: deleting_time
+            indexName: user_to_delete_time_index
+            tableName: users_to_delete
+  - changeSet:
+      id: 1697373284048-28
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: username
+            indexName: user_username_index
+            tableName: users
+            unique: true
+  - changeSet:
+      id: 1697373284048-29
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: username
+            baseTableName: active_sessions
+            constraintName: FK_ACTIVE_SESSIONS_ON_USERNAME
+            referencedColumnNames: username
+            referencedTableName: users
+        - createIndex:
+            columns:
+              - column:
+                  name: username
+            indexName: session_username_index
+            tableName: active_sessions
+  - changeSet:
+      id: 1697373284048-30
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: initiator_id
+            baseTableName: chats
+            constraintName: FK_CHATS_ON_INITIATOR
+            referencedColumnNames: user_id
+            referencedTableName: users
+  - changeSet:
+      id: 1697373284048-31
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: member_id
+            baseTableName: chats
+            constraintName: FK_CHATS_ON_MEMBER
+            referencedColumnNames: user_id
+            referencedTableName: users
+  - changeSet:
+      id: 1697373284048-32
+      author: spyro (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
         - addForeignKeyConstraint:
@@ -116,4 +463,95 @@ databaseChangeLog:
             constraintName: FK_CONFIRMATION_TOKENS_ON_USER
             referencedColumnNames: user_id
             referencedTableName: users
+  - changeSet:
+      id: 1697373284048-33
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: recipient_id
+            baseTableName: friend_requests
+            constraintName: FK_FRIEND_REQUESTS_ON_RECIPIENT
+            referencedColumnNames: user_id
+            referencedTableName: users
+        - createIndex:
+            columns:
+              - column:
+                  name: recipient_id
+            indexName: recipient_index
+            tableName: friend_requests
+  - changeSet:
+      id: 1697373284048-34
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: sender_id
+            baseTableName: friend_requests
+            constraintName: FK_FRIEND_REQUESTS_ON_SENDER
+            referencedColumnNames: user_id
+            referencedTableName: users
+        - createIndex:
+            columns:
+              - column:
+                  name: sender_id
+            indexName: sender_index
+            tableName: friend_requests
+  - changeSet:
+      id: 1697373284048-35
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: chat_id
+            baseTableName: messages
+            constraintName: FK_MESSAGES_ON_CHAT
+            referencedColumnNames: chat_id
+            referencedTableName: chats
+        - createIndex:
+            columns:
+              - column:
+                  name: chat_id
+            indexName: message_chat_id_index
+            tableName: messages
+  - changeSet:
+      id: 1697373284048-36
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: sender_id
+            baseTableName: messages
+            constraintName: FK_MESSAGES_ON_SENDER
+            referencedColumnNames: user_id
+            referencedTableName: users
+  - changeSet:
+      id: 1697373284048-37
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: additional_info_id
+            baseTableName: users
+            constraintName: FK_USERS_ON_ADDITIONAL_INFO
+            referencedColumnNames: additional_info_id
+            referencedTableName: additional_info
+  - changeSet:
+      id: 1697373284048-38
+      author: spyro (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: users_to_delete
+            constraintName: FK_USERS_TO_DELETE_ON_USER
+            referencedColumnNames: user_id
+            referencedTableName: users
+        - createIndex:
+            columns:
+              - column:
+                  name: user_id
+            indexName: user_to_delete_id_index
+            tableName: users_to_delete
+            unique: true
 

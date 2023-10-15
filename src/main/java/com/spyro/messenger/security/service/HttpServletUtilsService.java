@@ -1,7 +1,6 @@
 package com.spyro.messenger.security.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.bitwalker.useragentutils.UserAgent;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +26,6 @@ public interface HttpServletUtilsService {
             "HTTP_VIA",
             "REMOTE_ADDR",
     };
-
     String[] CHECKSUM_HEADERS = {
             HttpHeaders.USER_AGENT,
             HttpHeaders.ACCEPT,
@@ -52,8 +50,6 @@ public interface HttpServletUtilsService {
         Client c = new Parser().parse(header);
         var userAgent = c.userAgent;
         var os = c.os;
-        System.out.println(new StringBuilder(userAgent.family).append('/').append(userAgent.major).append('.').append(userAgent.minor).append(", ").append(os.family).append(' ').append(os.major).append(", ").append(c.device.family));
-
         return new StringBuilder(userAgent.family)
                 .append('/')
                 .append(userAgent.major)
@@ -68,10 +64,10 @@ public interface HttpServletUtilsService {
                 .toString();
     }
 
-    static Map<String,String> getChecksumHeaders(HttpServletRequest request) {
+    static Map<String, String> getChecksumHeaders(HttpServletRequest request) {
         Map<String, String> headers = new HashMap<>();
-        for (String headerName: CHECKSUM_HEADERS) {
-            headers.put(headerName,request.getHeader(headerName));
+        for (String headerName : CHECKSUM_HEADERS) {
+            headers.put(headerName, request.getHeader(headerName));
         }
         return headers;
     }

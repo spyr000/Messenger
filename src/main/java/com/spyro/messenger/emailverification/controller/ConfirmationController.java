@@ -1,7 +1,9 @@
 package com.spyro.messenger.emailverification.controller;
 
-import com.spyro.messenger.emailverification.util.ConfirmationUrls;
 import com.spyro.messenger.emailverification.service.ConfirmationService;
+import com.spyro.messenger.emailverification.util.ConfirmationUrls;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +16,13 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(ConfirmationUrls.CONFIRMATION_URL)
 @RequiredArgsConstructor
 @Slf4j
+@Hidden
+@Tag(name = "Confirmation", description = "The Confirmation API")
 public class ConfirmationController {
     private final ConfirmationService confirmationService;
 
     @RequestMapping(
-            value =  ConfirmationUrls.CONFIRM_REGISTRATION_URL,
+            value = ConfirmationUrls.CONFIRM_REGISTRATION_URL,
             method = {RequestMethod.GET, RequestMethod.POST}
     )
     public ModelAndView confirmUserAccountRegistration(
@@ -29,7 +33,7 @@ public class ConfirmationController {
     }
 
     @RequestMapping(
-            value =  ConfirmationUrls.CONFIRM_EMAIL_CHANGE_URL,
+            value = ConfirmationUrls.CONFIRM_EMAIL_CHANGE_URL,
             method = {RequestMethod.GET, RequestMethod.POST}
     )
     public ModelAndView confirmEmailChange(

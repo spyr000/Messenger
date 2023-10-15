@@ -2,9 +2,11 @@ package com.spyro.messenger.messaging.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spyro.messenger.exceptionhandling.exception.SessionAttributeNotSpecifiedException;
+import com.spyro.messenger.exceptionhandling.exception.UnableToWriteAsStringException;
 import com.spyro.messenger.messaging.dto.MessageRequest;
+import com.spyro.messenger.messaging.dto.MessageResponse;
 import com.spyro.messenger.messaging.entity.Chat;
-import com.spyro.messenger.messaging.service.MessagingService;
+import com.spyro.messenger.messaging.service.WebSocketMessagingService;
 import com.spyro.messenger.messaging.service.WebSocketSessionProcessorService;
 import com.spyro.messenger.user.entity.User;
 import lombok.NonNull;
@@ -18,20 +20,21 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ServerWebSocketHandler extends TextWebSocketHandler implements SubProtocolCapable {
+public class WebSocketHandler extends TextWebSocketHandler implements SubProtocolCapable {
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
     private final ObjectMapper objectMapper;
     private final WebSocketSessionProcessorService sessionProcessorService;
-    private final MessagingService messagingService;
+    private final WebSocketMessagingService messagingService;
 
     @Override
-    public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(@NonNull WebSocketSession session) {
         sessions.put(Objects.requireNonNull(session.getPrincipal()).getName(), session);
         sessionProcessorService.initSession(session);
         log.info("Server connection opened");
@@ -69,17 +72,27 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Chat attribute not specified");
         }
-        var messageResponse = messagingService.sendMessageWebSocket((User) userAttribute, (Chat) chatAttribute, messageRequest);
+        var messageResponse = messagingService.sendMessageThroughWebSocket((User) userAttribute, (Chat) chatAttribute, messageRequest);
         var addresseeSession = sessions.get(addresseeUsername);
         if (addresseeSession != null) {
             addresseeSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageResponse)));
         }
     }
 
+    public void updateSession(String addresseeUsername, MessageResponse messageResponse) {
+        var session = sessions.get(addresseeUsername);
+        if (session != null) {
+            try {
+                session.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageResponse)));
+            } catch (IOException e) {
+                throw new UnableToWriteAsStringException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            }
+        }
+    }
 
     @Override
-    public void handleTransportError(@NonNull WebSocketSession session, Throwable exception) {
-        log.info("Server transport error: {}", exception.getMessage());
+    public void handleTransportError(@NonNull WebSocketSession session, @NonNull Throwable exception) {
+        log.error("Server transport error: " + exception.getMessage(), exception);
     }
 
     @Override
