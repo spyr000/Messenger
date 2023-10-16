@@ -34,7 +34,7 @@ public interface HttpServletUtilsService {
     };
 
     static String getRequestIP(HttpServletRequest request) {
-        for (String header : IP_HEADERS) {
+        for (var header : IP_HEADERS) {
             String value = request.getHeader(header);
             if (value == null || value.isEmpty()) {
                 continue;
@@ -66,7 +66,7 @@ public interface HttpServletUtilsService {
 
     static Map<String, String> getChecksumHeaders(HttpServletRequest request) {
         Map<String, String> headers = new HashMap<>();
-        for (String headerName : CHECKSUM_HEADERS) {
+        for (var headerName : CHECKSUM_HEADERS) {
             headers.put(headerName, request.getHeader(headerName));
         }
         return headers;

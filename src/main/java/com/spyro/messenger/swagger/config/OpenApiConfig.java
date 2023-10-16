@@ -77,7 +77,7 @@ public class OpenApiConfig {
                                  @Value("#{${openapi.servers}}") Map<String, String> serversMap
     ) {
         List<Server> servers = new ArrayList<>();
-        for (String key : serversMap.keySet()) {
+        for (var key : serversMap.keySet()) {
             servers.add(new Server().url(key).description(serversMap.get(key)));
         }
         return new OpenAPI()

@@ -44,7 +44,7 @@ public class HtmlBuilderServiceImpl implements HtmlBuilderService {
 
     @Override
     public HtmlBuilderService links(Link... links) {
-        for (Link link : links) {
+        for (var link : links) {
             htmlContent = htmlContent.replace(LINK_LABEL, link.toString());
         }
         return this;
