@@ -1,5 +1,7 @@
-package com.spyro.messenger.user.entity;
+package com.spyro.messenger.user.repo;
 
+import com.spyro.messenger.user.entity.User;
+import com.spyro.messenger.user.entity.UserToDelete;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

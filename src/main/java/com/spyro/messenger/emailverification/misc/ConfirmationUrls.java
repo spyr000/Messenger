@@ -1,4 +1,4 @@
-package com.spyro.messenger.emailverification.util;
+package com.spyro.messenger.emailverification.misc;
 
 public abstract class ConfirmationUrls {
     public static final String CONFIRMATION_PARAMETER_NAME = "token";

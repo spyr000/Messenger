@@ -2,7 +2,7 @@ package com.spyro.messenger.emailverification.service.impl;
 
 import com.spyro.messenger.emailverification.service.EmailMessageBuilderService;
 import com.spyro.messenger.emailverification.service.HtmlBuilderService;
-import com.spyro.messenger.emailverification.util.Link;
+import com.spyro.messenger.emailverification.misc.Link;
 import com.spyro.messenger.user.entity.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

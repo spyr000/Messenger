@@ -1,6 +1,6 @@
 package com.spyro.messenger.security.config;
 
-import com.spyro.messenger.emailverification.util.ConfirmationUrls;
+import com.spyro.messenger.emailverification.misc.ConfirmationUrls;
 import com.spyro.messenger.security.filter.JwtAuthenticationFilter;
 import jakarta.servlet.ServletException;
 import lombok.RequiredArgsConstructor;

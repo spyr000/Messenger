@@ -1,6 +1,6 @@
 package com.spyro.messenger.emailverification.service;
 
-import com.spyro.messenger.emailverification.util.ConfirmationUrls;
+import com.spyro.messenger.emailverification.misc.ConfirmationUrls;
 import com.spyro.messenger.user.entity.User;
 import jakarta.mail.MessagingException;
 import org.springframework.scheduling.annotation.Async;

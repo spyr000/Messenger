@@ -1,7 +1,7 @@
 package com.spyro.messenger.swagger.config;
 
 
-import com.spyro.messenger.emailverification.util.ConfirmationUrls;
+import com.spyro.messenger.emailverification.misc.ConfirmationUrls;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;

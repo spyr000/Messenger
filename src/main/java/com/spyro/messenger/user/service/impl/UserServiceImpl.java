@@ -10,7 +10,7 @@ import com.spyro.messenger.security.service.JwtService;
 import com.spyro.messenger.user.dto.*;
 import com.spyro.messenger.user.entity.User;
 import com.spyro.messenger.user.entity.UserToDelete;
-import com.spyro.messenger.user.entity.UserToDeleteRepo;
+import com.spyro.messenger.user.repo.UserToDeleteRepo;
 import com.spyro.messenger.user.repo.UserRepo;
 import com.spyro.messenger.user.service.UserService;
 import com.spyro.messenger.user.service.UserTerminatorService;

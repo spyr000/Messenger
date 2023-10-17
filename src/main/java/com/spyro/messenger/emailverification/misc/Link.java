@@ -1,4 +1,4 @@
-package com.spyro.messenger.emailverification.util;
+package com.spyro.messenger.emailverification.misc;
 
 import lombok.*;
 

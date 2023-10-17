@@ -4,7 +4,7 @@ package com.spyro.messenger.emailverification.service.impl;
 import com.spyro.messenger.emailverification.service.ConfirmationService;
 import com.spyro.messenger.emailverification.service.EmailMessageBuilderService;
 import com.spyro.messenger.emailverification.service.EmailSenderService;
-import com.spyro.messenger.emailverification.util.Link;
+import com.spyro.messenger.emailverification.misc.Link;
 import com.spyro.messenger.exceptionhandling.exception.EntityAlreadyExistsException;
 import com.spyro.messenger.security.misc.ConfirmationTokenType;
 import com.spyro.messenger.user.entity.User;

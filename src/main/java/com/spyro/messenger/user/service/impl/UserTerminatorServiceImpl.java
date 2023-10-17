@@ -4,7 +4,7 @@ import com.spyro.messenger.friends.repo.FriendRequestRepo;
 import com.spyro.messenger.messaging.repo.ChatRepo;
 import com.spyro.messenger.security.repo.SessionRepo;
 import com.spyro.messenger.user.entity.User;
-import com.spyro.messenger.user.entity.UserToDeleteRepo;
+import com.spyro.messenger.user.repo.UserToDeleteRepo;
 import com.spyro.messenger.user.repo.UserRepo;
 import com.spyro.messenger.user.service.UserTerminatorService;
 import jakarta.transaction.Transactional;

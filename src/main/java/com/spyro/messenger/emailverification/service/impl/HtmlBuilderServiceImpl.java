@@ -1,7 +1,7 @@
 package com.spyro.messenger.emailverification.service.impl;
 
 import com.spyro.messenger.emailverification.service.HtmlBuilderService;
-import com.spyro.messenger.emailverification.util.Link;
+import com.spyro.messenger.emailverification.misc.Link;
 import org.springframework.stereotype.Service;
 
 @Service

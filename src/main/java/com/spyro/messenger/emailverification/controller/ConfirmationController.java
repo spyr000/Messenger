@@ -1,7 +1,7 @@
 package com.spyro.messenger.emailverification.controller;
 
 import com.spyro.messenger.emailverification.service.ConfirmationService;
-import com.spyro.messenger.emailverification.util.ConfirmationUrls;
+import com.spyro.messenger.emailverification.misc.ConfirmationUrls;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
