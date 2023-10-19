@@ -25,6 +25,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,6 +48,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final SessionService sessionService;
     private final SessionRepo sessionRepo;
 
+    @Async
     @Override
     public void register(RegistrationRequest request) {
         var user = new User(
