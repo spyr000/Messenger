@@ -46,9 +46,9 @@ class UserDetailsServiceImplTest {
                 actual.isEnabled()
         ).isEqualTo(testUser.isEnabled());
         assertThat(
-                actual.getAuthorities().toArray()
+                actual.getAuthorities().toArray()[0].toString()
         ).isEqualTo(
-                testUser.getAuthorities().toArray()
+                "ROLE_" + testUser.getAuthorities().toArray()[0]
         );
         verify(userRepo).findByUsername(eq(testUser.getUsername()));
     }

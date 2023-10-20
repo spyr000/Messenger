@@ -6,7 +6,7 @@ COPY mvnw .
 COPY pom.xml .
 COPY src src
 
-RUN --mount=type=cache,target=/root/.m2,rw ./mvnw package -Dmaven.test.skip
+RUN --mount=type=cache,target=/root/.m2,rw ./mvnw package
 
 FROM eclipse-temurin:17-jre-alpine
 COPY --from=builder target/*.jar server.jar

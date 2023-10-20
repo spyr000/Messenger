@@ -166,11 +166,6 @@ databaseChangeLog:
                   name: sending_time
                   type: DATETIME
               - column:
-                  constraints:
-                    nullable: false
-                  name: received
-                  type: BOOLEAN
-              - column:
                   name: chat_id
                   type: VARCHAR(255)
             tableName: messages
