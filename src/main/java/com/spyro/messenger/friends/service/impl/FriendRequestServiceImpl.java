@@ -66,7 +66,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
         var sender = userService.extractUser(authHeader);
         var recipient = userRepo.findByUsername(recipientUsername)
                 .orElseThrow(() -> new EntityNotFoundException(User.class));
-        if (!friendRequestRepo.existsBySenderAndRecipient(sender, recipient)) {
+        if (friendRequestRepo.findByTwoFriends(sender, recipient).isEmpty()) {
             friendRequestRepo.save(new FriendRequest(sender, recipient));
         }
     }

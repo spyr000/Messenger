@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         var user = userRepo.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                true, true, true, true,
+                user.isEnabled(), true, true, true,
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())));
 
     }

@@ -1,9 +1,9 @@
 package com.spyro.messenger;
 
+import com.spyro.messenger.annotation.ConfigureTests;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@ConfigureTests
 class MessengerApplicationTests {
 
     @Test

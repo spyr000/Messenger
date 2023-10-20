@@ -1,6 +1,6 @@
 package com.spyro.messenger.security.service.impl;
 
-import com.spyro.messenger.annotation.IT;
+import com.spyro.messenger.annotation.ConfigureTests;
 import com.spyro.messenger.emailverification.service.EmailSenderService;
 import com.spyro.messenger.security.dto.AuthenticationRequest;
 import com.spyro.messenger.security.dto.AuthenticationResponse;
@@ -36,7 +36,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 
-@IT
+@ConfigureTests
 class AuthenticationServiceImplTest {
     @Mock
     private UserRepo userRepo;
@@ -56,13 +56,12 @@ class AuthenticationServiceImplTest {
     private SessionRepo sessionRepo;
     @InjectMocks
     private AuthenticationServiceImpl authService;
-
     private User testUser;
 
     @BeforeEach
     void setupTestUser() {
         testUser = User.builder()
-                .username("alex")
+                .username("JohnDoe")
                 .password("password")
                 .role(Role.USER)
                 .build();
@@ -72,18 +71,18 @@ class AuthenticationServiceImplTest {
 
     @Test
     void register() throws MessagingException, UnsupportedEncodingException {
-        var password = testUser.getPassword();
+        var testPassword = testUser.getPassword();
         var request = new RegistrationRequest(
                 testUser.getUsername(),
                 testUser.getEmail(),
-                password,
+                testPassword,
                 testUser.getFirstName(),
                 testUser.getLastName()
         );
-        when(passwordEncoder.encode(eq(password))).thenReturn(password);
+        when(passwordEncoder.encode(eq(testPassword))).thenReturn(testPassword);
         doNothing().when(emailSenderService).sendAccountActivationMessage(any(User.class));
         authService.register(request);
-        verify(passwordEncoder).encode(eq(password));
+        verify(passwordEncoder).encode(eq(testPassword));
         verify(emailSenderService).sendAccountActivationMessage(any(User.class));
     }
 

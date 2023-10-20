@@ -32,7 +32,6 @@ public class Message {
     private String content;
     @Column(name = "sending_time")
     private LocalDateTime timestamp;
-    private boolean received;
     @ManyToOne
     @JoinColumn(name = "chat_id")
     private Chat chat;
@@ -42,7 +41,6 @@ public class Message {
         this.content = content;
         this.chat = chat;
         this.timestamp = LocalDateTime.now();
-        this.received = false;
     }
 
     public Message() {

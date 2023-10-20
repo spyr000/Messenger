@@ -16,6 +16,6 @@ import java.lang.annotation.Target;
 @SpringBootTest(
         classes = ApplicationRunner.class
 )
-@TestPropertySource(locations = {"classpath:application-test.properties"})
-public @interface IT {
+@TestPropertySource(locations = {"classpath:application-test.yaml"})
+public @interface ConfigureTests {
 }
